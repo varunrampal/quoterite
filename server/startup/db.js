@@ -1,10 +1,10 @@
 const winston = require('winston');
 const mongoose = require('mongoose');
-
+const {DB_CONNECTION_STRING} = require('../utils/constants');
 module.exports = function() {
   // Connect to database and start server
 mongoose
-    .connect(process.env.DB_CONNECTION_STRING, {
+    .connect(DB_CONNECTION_STRING, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
         useFindAndModify: false,

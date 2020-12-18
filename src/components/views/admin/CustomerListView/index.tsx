@@ -21,6 +21,7 @@ import {
 } from '../../../../stores/customers/CustomersActions';
 import { CustomerState } from '../../../../types/appTypes';
 import Heading from '../../../Header';
+import {REACT_APP_API_BASE_URL} from '../../../../utils/constants';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -75,8 +76,9 @@ const CustomerListView = () => {
 
     const getCustomerCount = async (reset: boolean = false) => {
         try {
-            const endpoint =
-                process.env.REACT_APP_API_BASE_URL + 'user/total/0';
+            // const endpoint =
+            //     process.env.REACT_APP_API_BASE_URL + 'user/total/0';
+                const endpoint = REACT_APP_API_BASE_URL + 'user/total/0';
 
             const responseData = await sendRequest(endpoint, 'GET', null, {
                 Authorization: 'Bearer ' + auth.token,
@@ -95,7 +97,8 @@ const CustomerListView = () => {
     const getCustomers = async (reset: boolean) => {
         try {
           
-            const endpoint = process.env.REACT_APP_API_BASE_URL + 'user/';
+           // const endpoint = process.env.REACT_APP_API_BASE_URL + 'user/';
+           const endpoint = REACT_APP_API_BASE_URL + 'user/';
             let currentPage = page;
 
             if (reset) {
@@ -154,8 +157,14 @@ const CustomerListView = () => {
                 currentPage = 0;
             }
     
+            // const endpoint =
+            //     process.env.REACT_APP_API_BASE_URL +
+            //     `user/filter/${userRole}&${
+            //         currentPage + 1
+            //     }&${recordsPerPage}&${value}`;
+
             const endpoint =
-                process.env.REACT_APP_API_BASE_URL +
+                REACT_APP_API_BASE_URL +
                 `user/filter/${userRole}&${
                     currentPage + 1
                 }&${recordsPerPage}&${value}`;

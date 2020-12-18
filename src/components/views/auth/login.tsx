@@ -19,6 +19,7 @@ import ErrorModal from '../../../ui/ErrorModal';
 import { AuthContext } from '../../../context/auth-context';
 import withErrorBoundary from '../../../hoc/withErrorBoundary';
 import AppLink from '../../AppLink';
+import {REACT_APP_API_BASE_URL} from '../../../utils/constants';
 
 //TODO: try to refactor using example from medium subscription
 const styles = makeStyles((theme: Theme) =>
@@ -122,7 +123,8 @@ const Login: React.FC = () => {
 
     const loginUser = async (values: ILoginForm, resetForm: Function) => {
         try {
-            const endpoint = process.env.REACT_APP_API_BASE_URL + 'user/login';
+            // const endpoint = process.env.REACT_APP_API_BASE_URL + 'user/login';
+            const endpoint = REACT_APP_API_BASE_URL + 'user/login';
             const responseData = await sendRequest(
                 endpoint,
                 'POST',

@@ -18,6 +18,7 @@ import {
     
 } from '../../../../stores/property/PropertiesActions';
 import Toolbar from './ToolBar';
+import {REACT_APP_API_BASE_URL} from '../../../../utils/constants';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -53,8 +54,9 @@ const Properties = () => {
 
     const loadProperties = async () => {
         try {
-            const endpoint =
-                process.env.REACT_APP_API_BASE_URL + 'customer/properties';
+            // const endpoint =
+            //     process.env.REACT_APP_API_BASE_URL + 'customer/properties';
+            const endpoint = REACT_APP_API_BASE_URL + 'customer/properties';
             const responseData = await sendRequest(
                 endpoint,
                 'POST',

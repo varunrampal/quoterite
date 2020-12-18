@@ -11,6 +11,7 @@ const { Receipt } = require('../models/receipt');
 const HttpError = require('../helpers/http-error');
 const job = require('../jobs/export-receipts-job');
 const { appEnums } = require('../helpers/app-enums');
+const {JWT_KEY} = require('../utils/constants');
 
 // @route POST /user/signup
 // @desc to register user, returns userid, email and token
@@ -51,7 +52,8 @@ const signup = async (req, res, next) => {
             usrId: createdUser.id,
             email: createdUser.email,
         },
-        process.env.JWT_KEY,
+        //process.env.JWT_KEY,
+        JWT_KEY,
         {
             expiresIn: '1h',
         }
@@ -111,7 +113,8 @@ const login = async (req, res, next) => {
             userId: existingUser.id,
             email: existingUser.email,
         },
-        process.env.JWT_KEY,
+        //process.env.JWT_KEY,
+        JWT_KEY,
         {
             expiresIn: '1h',
         }
