@@ -2,13 +2,12 @@
     "name": "server",
     "version": "0.0.0",
     "private": true,
+    "engines": {
+        "node": "14.7.0"
+        },
     "scripts": {
-        "start": "node app.js",
-        "test": "set NODE_ENV=test&&jest --testEnvironment=node --runInBand --detectOpenHandles --watchAll --verbose",
-        "dev": "set NODE_ENV=development&&nodemon app.js",
-        "prod": "set NODE_ENV=production&&nodemon app.js",
-        "stage": "set NODE_ENV=staging&&nodemon app.js"
-        
+        "start":"node app.js"
+               
     },
     "dependencies": {
         "@sendgrid/mail": "^7.2.4",
