@@ -24,6 +24,8 @@ app.get('/jobs', async (req, res) => {
   }
 });
 
+app.post()
+
 
 //require('./startup/logging')(); //logging setup
 require('./startup/routes')(app);// Routes setup
