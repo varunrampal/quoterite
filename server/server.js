@@ -6,9 +6,9 @@ require('winston-mongodb');
 const app = express();
 
 // get environment variabless
-require('dotenv').config({
-    path: `${__dirname}/.env.${process.env.NODE_ENV}`,
-});
+// require('dotenv').config({
+//     path: `${__dirname}/.env.${process.env.NODE_ENV}`,
+// });
 
 
 //app.use(express.static(join(__dirname, 'public')));
