@@ -11,11 +11,10 @@ require('dotenv').config({
 });
 
 
-app.use(express.static(join(__dirname, 'public')));
+//app.use(express.static(join(__dirname, 'public')));
 
 const buildPath = join(__dirname, '..', 'build');
 app.use(express.static(buildPath));
-
 
 app.get('/jobs', async (req, res) => {
   try {
