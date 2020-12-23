@@ -25,9 +25,9 @@ app.get('/jobs', async (req, res) => {
 });
 
 
-require('./startup/logging')(); //logging setup
-require('./startup/routes')(app);// Routes setup
-require('./startup/db')();// database setup
+//require('./startup/logging')(); //logging setup
+//require('./startup/routes')(app);// Routes setup
+//require('./startup/db')();// database setup
 
 // The "catchall" handler: for any request that doesn't
 // match one above, send back React's index.html file.
