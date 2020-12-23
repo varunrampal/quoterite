@@ -38,7 +38,7 @@ router.post(
 );
 
 router.post(
-    '/login',
+    '/api/login',
     userloginValidationRules(),
     validate,
     usersController.login
