@@ -4,11 +4,9 @@
     "private": true,
     "engines": {
         "node": "14.7.0"
-        },
+    },
     "scripts": {
-        "start":"node server.js"
-        
-               
+        "start": "node server.js"
     },
     "dependencies": {
         "@sendgrid/mail": "^7.2.4",

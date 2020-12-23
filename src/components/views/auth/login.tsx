@@ -124,7 +124,7 @@ const Login: React.FC = () => {
     const loginUser = async (values: ILoginForm, resetForm: Function) => {
         try {
             // const endpoint = process.env.REACT_APP_API_BASE_URL + 'user/login';
-            const endpoint = REACT_APP_API_BASE_URL + 'user/login';
+            const endpoint = `/api/user/login`;
             const responseData = await sendRequest(
                 endpoint,
                 'POST',
