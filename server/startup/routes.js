@@ -1,8 +1,8 @@
- const express = require('express');
+const express = require('express');
 const bodyParser = require('body-parser');
- const cookieParser = require('cookie-parser');
+const cookieParser = require('cookie-parser');
 // const cors = require('cors');
- const { json, urlencoded, Request, Response } = express;
+const { json, urlencoded } = express;
 // const kue = require('kue');
 // const HttpError = require('../helpers/http-error');
 
@@ -15,15 +15,15 @@ const bodyParser = require('body-parser');
 // const propertyRoutes = require('../routes/property-routes');
 
 module.exports = function (app) {
-   app.use(bodyParser.json({limit: '50mb'}));
-   app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
-    app.use(json());
-    app.use(
-        urlencoded({
-            extended: false,
-        })
-    );
-    app.use(cookieParser());
+//    app.use(bodyParser.json({limit: '50mb'}));
+//    app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
+//     app.use(json());
+//     app.use(
+//         urlencoded({
+//             extended: false,
+//         })
+//     );
+//     app.use(cookieParser());
 
 //     app.use(cors());
 
