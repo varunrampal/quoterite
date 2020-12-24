@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
-// const cors = require('cors');
+const cors = require('cors');
 const { json, urlencoded } = express;
 // const kue = require('kue');
 // const HttpError = require('../helpers/http-error');
@@ -28,7 +28,7 @@ module.exports = function (app) {
 //     app.use(cors());
 
 //     // routes declaration
-     app.use('/api/user', usersRoutes); // => /api/user...
+    // app.use('/api/user', usersRoutes); // => /api/user...
 //     app.use('/api/receipt', receiptRoutes); // => /api/receipt...
 //     app.use('/api/sign_s3', s3routes); // => /api/sign_s3
 //     app.use('/api/customer', propertyRoutes); // => /api/customer/properties...
