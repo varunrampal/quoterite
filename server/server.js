@@ -9,9 +9,13 @@ require('winston-mongodb');
 const winston = require('winston');
 const mongoose = require('mongoose');
 const {DB_CONNECTION_STRING} = require('./utils/constants');
-
+const {JWT_KEY} = require('./utils/constants');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const { User } = require('./models/user');
+const { success, error } = require('./helpers/api-response');
 const app = express();
-const usersRoutes = require('./routes/users-routes');
+
 
 // get environment variabless
 // require('dotenv').config({
@@ -67,6 +71,70 @@ app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
  .catch((err) => {
      console.log(err);
  });
+
+// @route POST /user/login
+// @desc to authenticate user, returns userid, email and token
+// @access Public
+app.post('/api/user/login', async (req, res, next) => {
+  const { email, password } = req.body;
+
+  // check if user with the provided email-id exists
+  let existingUser;
+
+  existingUser = await User.findOne({
+      email: email,
+      active: 1
+  });
+
+  //user not exists with the provide email-id
+  if (!existingUser) {
+     
+      return res.status(401).json(error("Invalid credentials.", res.statusCode));
+  }
+
+
+  // check if provided password is correct( compare the password with the password saved in the database)
+  let isValidPassword = false;
+
+  isValidPassword = await bcrypt.compare(password, existingUser.password);
+
+  // Password is not valid
+  if (!isValidPassword) {
+   
+      return res.status(401).json(error("Invalid credentials.", res.statusCode));
+  }
+
+  // generate token
+  let token;
+
+  token = jwt.sign(
+      {
+          userId: existingUser.id,
+          email: existingUser.email,
+      },
+      //process.env.JWT_KEY,
+      JWT_KEY,
+      {
+          expiresIn: '1h',
+      }
+  );
+
+   res.status(200).json(
+      success(
+          'You are logged in successfully.',
+          {
+              userId: existingUser.id,
+              userName: existingUser.name,
+              userRole: existingUser.role,
+              userEmail: existingUser.email,
+              token: token,
+          },
+          res.statusCode
+      )
+  );
+});
+
+
 
 const port = process.env.PORT || 5000;
 //const server = app.listen(port, () => winston.info(`Listening on port ${port}...`));
