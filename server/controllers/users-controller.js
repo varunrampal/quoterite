@@ -1,7 +1,7 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 //const mongoose = require('mongoose');
-const kue = require('kue');
+//const kue = require('kue');
 //const queue = kue.createQueue();
 //const winston = require('winston');
 
@@ -366,49 +366,49 @@ const login = async (req, res, next) => {
 
 // };
 
-// const getTotalUsers = async (req, res, next) => {
-//     const role = parseInt(req.params.role);
-//     const userCount = await User.find({role}).count();
-//     res.status(200).json(
-//         success(
-//             'Users count',
-//             {
-//                 userCount,
-//             },
-//             res.statusCode
-//         )
-//     );
-// };
+const getTotalUsers = async (req, res, next) => {
+    const role = parseInt(req.params.role);
+    const userCount = await User.find({role}).count();
+    res.status(200).json(
+        success(
+            'Users count',
+            {
+                userCount,
+            },
+            res.statusCode
+        )
+    );
+};
 
 
 // @route GET/
 // @desc get all users based on role.
 // @access Private
 
-// const getAllUsers = async (req, res, next) => {
+const getAllUsers = async (req, res, next) => {
 
-//      const pagination = req.body.pagination ? parseInt(req.body.pagination) : 10;
+     const pagination = req.body.pagination ? parseInt(req.body.pagination) : 10;
    
-//     //PageNumber From which Page to Start 
-//     const pageNumber = req.body.page ? parseInt(req.body.page) : 1;
+    //PageNumber From which Page to Start 
+    const pageNumber = req.body.page ? parseInt(req.body.page) : 1;
 
-//      const users = await User.find({
-//         role:req.body.role
-//     }, { name: 1, email: 1, phone: 1, _id: 1, active: 1 })
-//     .sort({"name" : 1})
-//         .skip((pageNumber - 1) * pagination)
-//         .limit(pagination);
+     const users = await User.find({
+        role:req.body.role
+    }, { name: 1, email: 1, phone: 1, _id: 1, active: 1 })
+    .sort({"name" : 1})
+        .skip((pageNumber - 1) * pagination)
+        .limit(pagination);
 
-//        res.status(200).json(
-//             success(
-//                 'Users list',
-//                 {
-//                     users,
-//                 },
-//                 res.statusCode
-//             )
-//         );
-// };
+       res.status(200).json(
+            success(
+                'Users list',
+                {
+                    users,
+                },
+                res.statusCode
+            )
+        );
+};
 
 
 // const FilterUsersByNameOrEmail = async (req, res, next) => {
@@ -494,7 +494,9 @@ const login = async (req, res, next) => {
 // }
 
 module.exports = {
-    login  
+    login,
+    getTotalUsers,
+    getAllUsers 
 };
 
 // signup,

@@ -92,11 +92,11 @@ router.post(
 // router.get('/monthlyreport/:userid&:year&:month&:timezone', 
 // reportController.getMonthlyReport);
 // router.get('/receipts/export/:month', usersController.exportReceipts);
-// router.post('/', usersController.getAllUsers);
-// router.get(
-//     '/total/:role',
-//      usersController.getTotalUsers
-// );
+ router.post('/', usersController.getAllUsers);
+router.get(
+    '/total/:role',
+     usersController.getTotalUsers
+);
 // router.post('/update', usersController.updateUser);
 // router.post('/update/multi', usersController.updateUsers);
 // router.get(

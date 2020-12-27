@@ -68,6 +68,7 @@ const CustomerListView = () => {
 
     useEffect(() => {
        if (!filterRecords) {
+           console.log('hello');
             getCustomerCount();
         } else {
             filterCustomers(searchStr);
@@ -78,7 +79,8 @@ const CustomerListView = () => {
         try {
             // const endpoint =
             //     process.env.REACT_APP_API_BASE_URL + 'user/total/0';
-                const endpoint = REACT_APP_API_BASE_URL + 'user/total/0';
+          
+                const endpoint =  `${REACT_APP_API_BASE_URL}/api/user/total/0`;
 
             const responseData = await sendRequest(endpoint, 'GET', null, {
                 Authorization: 'Bearer ' + auth.token,
@@ -98,7 +100,7 @@ const CustomerListView = () => {
         try {
           
            // const endpoint = process.env.REACT_APP_API_BASE_URL + 'user/';
-           const endpoint = REACT_APP_API_BASE_URL + 'user/';
+           const endpoint = `${REACT_APP_API_BASE_URL}/user/`;
             let currentPage = page;
 
             if (reset) {
