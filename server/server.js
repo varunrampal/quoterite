@@ -11,7 +11,7 @@ const mongoose = require('mongoose');
 const {DB_CONNECTION_STRING} = require('./utils/constants');
 
 const app = express();
-//const usersRoutes = require('./routes/users-routes');
+const usersRoutes = require('./routes/users-routes');
 
 // get environment variabless
 // require('dotenv').config({
