@@ -5,79 +5,91 @@ const jwt = require('jsonwebtoken');
 //const queue = kue.createQueue();
 //const winston = require('winston');
 
-const { success, error } = require('../helpers/api-response');
-const { User } = require('../models/user');
+const {
+    success,
+    error
+} = require('../helpers/api-response');
+const {
+    User
+} = require('../models/user');
 //const { Receipt } = require('../models/receipt');
 //const HttpError = require('../helpers/http-error');
 //const job = require('../jobs/export-receipts-job');
 //const { appEnums } = require('../helpers/app-enums');
-const {JWT_KEY} = require('../utils/constants');
+const {
+    JWT_KEY
+} = require('../utils/constants');
 
 // @route POST /user/signup
 // @desc to register user, returns userid, email and token
 // @access Public
-// const signup = async (req, res, next) => {
-//     const { name, email, password, phone } = req.body;
-//     //throw new Error('Could not sign up the user');
-//     const hasUser = await User.findOne({
-//         email: email,
-//     });
+const signup = async (req, res, next) => {
+    const {
+        name,
+        email,
+        password,
+        phone
+    } = req.body;
+    //throw new Error('Could not sign up the user');
+    const hasUser = await User.findOne({
+        email: email,
+    });
 
-//     // if user with the provided email already exists
-//     if (hasUser) {
-//         return res.status(422).json(error("User already exists.", res.statusCode));
-//     }
+    // if user with the provided email already exists
+    if (hasUser) {
+        return res.status(422).json(error("User already exists.", res.statusCode));
+    }
 
-//     // hash the password
-//     let hashedPassword;
-//     hashedPassword = await bcrypt.hash(password, 12);
+    // hash the password
+    let hashedPassword;
+    hashedPassword = await bcrypt.hash(password, 12);
 
-//     // user object to save in the db
-//     let createdUser = new User({
-//         name,
-//         email,
-//         phone,
-//         password: hashedPassword,
-//         role: 0,
-//         active: true
-//     });
+    // user object to save in the db
+    let createdUser = new User({
+        name,
+        email,
+        phone,
+        password: hashedPassword,
+        role: 0,
+        active: true
+    });
 
-//     // save user in the db
-//     await createdUser.save();
+    // save user in the db
+    await createdUser.save();
 
-//     // generate token
-//     let token;
-//     token = jwt.sign(
-//         {
-//             usrId: createdUser.id,
-//             email: createdUser.email,
-//         },
-//         //process.env.JWT_KEY,
-//         JWT_KEY,
-//         {
-//             expiresIn: '1h',
-//         }
-//     );
-//     return res.status(201).json(
-//         success(
-//             'You are signed up successfully.',
-//             {
-//                 userId: createdUser.id,
-//                 userName: createdUser.name,
-//                 userRole: createdUser.role,
-//                 userEmail: createdUser.email,
-//                 token: token,
-//             },
-//             res.statusCode
-//         )
-//     );
-// };
+    // generate token
+    let token;
+    token = jwt.sign({
+            usrId: createdUser.id,
+            email: createdUser.email,
+        },
+        //process.env.JWT_KEY,
+        JWT_KEY, {
+            expiresIn: '1h',
+        }
+    );
+    return res.status(201).json(
+        success(
+            'You are signed up successfully.', {
+                userId: createdUser.id,
+                userName: createdUser.name,
+                userRole: createdUser.role,
+                userEmail: createdUser.email,
+                token: token,
+            },
+            res.statusCode
+        )
+    );
+};
 
 // @route POST /user/login
 // @desc to authenticate user, returns userid, email and token
 // @access Public
 const login = async (req, res, next) => {
-    const { email, password } = req.body;
+    const {
+        email,
+        password
+    } = req.body;
 
     // check if user with the provided email-id exists
     let existingUser;
@@ -89,7 +101,7 @@ const login = async (req, res, next) => {
 
     //user not exists with the provide email-id
     if (!existingUser) {
-       
+
         return res.status(401).json(error("Invalid credentials.", res.statusCode));
     }
 
@@ -101,29 +113,26 @@ const login = async (req, res, next) => {
 
     // Password is not valid
     if (!isValidPassword) {
-     
+
         return res.status(401).json(error("Invalid credentials.", res.statusCode));
     }
 
     // generate token
     let token;
 
-    token = jwt.sign(
-        {
+    token = jwt.sign({
             userId: existingUser.id,
             email: existingUser.email,
         },
         //process.env.JWT_KEY,
-        JWT_KEY,
-        {
+        JWT_KEY, {
             expiresIn: '1h',
         }
     );
 
-     res.status(200).json(
+    res.status(200).json(
         success(
-            'You are logged in successfully.',
-            {
+            'You are logged in successfully.', {
                 userId: existingUser.id,
                 userName: existingUser.name,
                 userRole: existingUser.role,
@@ -368,11 +377,12 @@ const login = async (req, res, next) => {
 
 const getTotalUsers = async (req, res, next) => {
     const role = parseInt(req.params.role);
-    const userCount = await User.find({role}).count();
+    const userCount = await User.find({
+        role
+    }).count();
     res.status(200).json(
         success(
-            'Users count',
-            {
+            'Users count', {
                 userCount,
             },
             res.statusCode
@@ -387,63 +397,105 @@ const getTotalUsers = async (req, res, next) => {
 
 const getAllUsers = async (req, res, next) => {
 
-     const pagination = req.body.pagination ? parseInt(req.body.pagination) : 10;
-   
+    const pagination = req.body.pagination ? parseInt(req.body.pagination) : 10;
+
     //PageNumber From which Page to Start 
     const pageNumber = req.body.page ? parseInt(req.body.page) : 1;
 
-     const users = await User.find({
-        role:req.body.role
-    }, { name: 1, email: 1, phone: 1, _id: 1, active: 1 })
-    .sort({"name" : 1})
+    const users = await User.find({
+            role: req.body.role
+        }, {
+            name: 1,
+            email: 1,
+            phone: 1,
+            _id: 1,
+            active: 1
+        })
+        .sort({
+            "name": 1
+        })
         .skip((pageNumber - 1) * pagination)
         .limit(pagination);
 
-       res.status(200).json(
-            success(
-                'Users list',
-                {
-                    users,
-                },
-                res.statusCode
-            )
-        );
+    res.status(200).json(
+        success(
+            'Users list', {
+                users,
+            },
+            res.statusCode
+        )
+    );
 };
 
+// @route GET/
+// @desc filter users by email or email.
+// @access Private
+const FilterUsersByNameOrEmail = async (req, res, next) => {
 
-// const FilterUsersByNameOrEmail = async (req, res, next) => {
+    const pagination = req.params.pagination ? parseInt(req.params.pagination) : 10;
+    const pageNumber = req.params.page ? parseInt(req.params.page) : 1;
+    const {
+        role,
+        value
+    } = req.params;
 
-//     const pagination =req.params.pagination ? parseInt(req.params.pagination) : 10;
-//     const pageNumber = req.params.page ? parseInt(req.params.page) : 1;
-//     const { role, value} = req.params;
+    const userCount = await User.find({
+        $or: [{
+            name: {
+                $regex: value + '.*',
+                $options: 'i'
+            }
+        }, {
+            email: {
+                $regex: value + '.*',
+                $options: 'i'
+            }
+        }],
+        role: role
+    }).count();
 
-//     const userCount = await User.find({ $or:[{name:{ $regex: value + '.*', $options: 'i' }},{email: { $regex: value + '.*', $options: 'i' }}], role:role}).count();
-  
-//     const users = await User.find({
-//         $or:[{name:{ $regex: value + '.*', $options: 'i' }},{email: { $regex: value + '.*', $options: 'i' }}], role:role
-    
-//    }, { name: 1, email: 1, _id: 1, active: 1 })
-//    .sort({"name" : 1})
-//        .skip((pageNumber - 1) * pagination)
-//        .limit(pagination);
+    const users = await User.find({
+            $or: [{
+                name: {
+                    $regex: value + '.*',
+                    $options: 'i'
+                }
+            }, {
+                email: {
+                    $regex: value + '.*',
+                    $options: 'i'
+                }
+            }],
+            role: role
 
-//       res.status(200).json(
-//            success(
-//                'Filtered users list',
-//                {
-//                    users,
-//                    totalRecords:userCount
-//                },
-//                res.statusCode
-//            )
-//        );
-// };
+        }, {
+            name: 1,
+            email: 1,
+            _id: 1,
+            active: 1
+        })
+        .sort({
+            "name": 1
+        })
+        .skip((pageNumber - 1) * pagination)
+        .limit(pagination);
+
+    res.status(200).json(
+        success(
+            'Filtered users list', {
+                users,
+                totalRecords: userCount
+            },
+            res.statusCode
+        )
+    );
+};
 
 
 // const updateUser = async(req, res, next) => {
 
 //     const user = await User.findById(req.body.id);
- 
+
 //     if (!user) {
 //         res.status(400).json(error("Invalid user details.", res.statusCode));
 //     } else {
@@ -456,7 +508,7 @@ const getAllUsers = async (req, res, next) => {
 //     );
 
 //     await newUser.save();
-    
+
 //     res.status(200).json(
 //         success(
 //             'user updated',
@@ -467,7 +519,7 @@ const getAllUsers = async (req, res, next) => {
 //         )
 //     );
 //  }
- 
+
 // }
 
 // const updateUsers = async(req, res) => {
@@ -495,8 +547,10 @@ const getAllUsers = async (req, res, next) => {
 
 module.exports = {
     login,
+    signup,
     getTotalUsers,
-    getAllUsers 
+    getAllUsers,
+    FilterUsersByNameOrEmail
 };
 
 // signup,

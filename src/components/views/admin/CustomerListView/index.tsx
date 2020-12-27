@@ -148,7 +148,7 @@ const CustomerListView = () => {
     };
     const filterCustomers = async (value: string) => {
 
-        if(value.trim() == '') {
+        if(value.trim() === '') {
            getCustomerCount();
         }else {
            
@@ -166,8 +166,7 @@ const CustomerListView = () => {
             //     }&${recordsPerPage}&${value}`;
 
             const endpoint =
-                REACT_APP_API_BASE_URL +
-                `user/filter/${userRole}&${
+            `${REACT_APP_API_BASE_URL}/user/filter/${userRole}&${
                     currentPage + 1
                 }&${recordsPerPage}&${value}`;
             const responseData = await sendRequest(endpoint, 'GET', null, {

@@ -1,5 +1,5 @@
 const {
-    
+    userSignupValidationRules,
     userloginValidationRules,
     validate,
 } = require('../validators/user-validators');
@@ -35,12 +35,12 @@ const usersController = require('../controllers/users-controller');
 // const reportController = require('../controllers/report-controller');
 // const { route } = require('./receipt-routes');
 
-// router.post(
-//     '/signup',
-//     userSignupValidationRules(),
-//     validate,//
-//     usersController.signup
-// );
+router.post(
+    '/signup',
+    userSignupValidationRules(),
+    validate,
+    usersController.signup
+);
 
 router.post(
     '/login',
@@ -99,9 +99,9 @@ router.get(
 );
 // router.post('/update', usersController.updateUser);
 // router.post('/update/multi', usersController.updateUsers);
-// router.get(
-//     '/filter/:role&:page&:pagination&:value',
-//      usersController.FilterUsersByNameOrEmail
-// );
+router.get(
+    '/filter/:role&:page&:pagination&:value',
+     usersController.FilterUsersByNameOrEmail
+);
 
 module.exports = router;
