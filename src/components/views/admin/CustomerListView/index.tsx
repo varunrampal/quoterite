@@ -80,7 +80,7 @@ const CustomerListView = () => {
             // const endpoint =
             //     process.env.REACT_APP_API_BASE_URL + 'user/total/0';
           
-                const endpoint =  `${REACT_APP_API_BASE_URL}/api/user/total/0`;
+                const endpoint =  `${REACT_APP_API_BASE_URL}/user/total/0`;
 
             const responseData = await sendRequest(endpoint, 'GET', null, {
                 Authorization: 'Bearer ' + auth.token,
