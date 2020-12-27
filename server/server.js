@@ -11,7 +11,7 @@ const mongoose = require('mongoose');
 const {DB_CONNECTION_STRING} = require('./utils/constants');
 
 const app = express();
-const usersRoutes = require('./routes/users-routes');
+//const usersRoutes = require('./routes/users-routes');
 
 // get environment variabless
 // require('dotenv').config({
@@ -55,7 +55,7 @@ app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
  app.use(cors());
 
  // routes declaration
- app.use('/api/user', usersRoutes); // => /api/user...
+ //app.use('/api/user', usersRoutes); // => /api/user...
 
 //  mongoose
 //  .connect(DB_CONNECTION_STRING, {
