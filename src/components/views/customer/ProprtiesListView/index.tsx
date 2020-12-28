@@ -51,7 +51,7 @@ const Properties = () => {
         searchStr,
     } = useSelector((state: AppState) => state.properties);
 
-    //Load properties
+    //Load all properties
     const loadProperties = async () => {
         try {
             // const endpoint =

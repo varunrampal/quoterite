@@ -5,7 +5,6 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import LocalMallIcon from '@material-ui/icons/LocalMall';
 import AssignmentIcon from '@material-ui/icons/Assignment';
-import RoomIcon from '@material-ui/icons/Room';
 import PlaylistAddCheckIcon from '@material-ui/icons/PlaylistAddCheck';
 import { useConfirm } from 'material-ui-confirm';
 import SuccessModal from './SuccessModal';
@@ -84,7 +83,7 @@ const PropertDetails: React.FC<IProperty> = ({
                     <Tooltip title="Orders" arrow>
                         <IconButton
                             aria-label="orders"
-                            onClick={() => handleQuote(__id)}
+                            onClick={() => alert('open order history page')}
                         >
                             <LocalMallIcon />
                         </IconButton>
@@ -94,7 +93,7 @@ const PropertDetails: React.FC<IProperty> = ({
                     <Tooltip title="quotes" arrow>
                         <IconButton
                             aria-label="quotes"
-                            onClick={() => handleQuote(__id)}
+                            onClick={() => alert('open quote history page')}
                         >
                             <AssignmentIcon />
                         </IconButton>
