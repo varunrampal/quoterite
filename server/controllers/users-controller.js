@@ -30,6 +30,7 @@ const signup = async (req, res, next) => {
         password,
         phone
     } = req.body;
+    console.log(req.body);
     //throw new Error('Could not sign up the user');
     const hasUser = await User.findOne({
         email: email,

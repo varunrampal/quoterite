@@ -22,6 +22,7 @@ import { green } from '@material-ui/core/colors';
 import loginBg from '../../../assets/site-logo.png';
 import Button from '../../../ui/Button';
 import AppLink from '../../AppLink';
+import {REACT_APP_API_BASE_URL} from '../../../utils/constants';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -121,7 +122,7 @@ const SignUp: React.FunctionComponent = () => {
 
     const createNewUser = async (values: ISignUpForm, resetForm: Function) => {
         try {
-            const endpoint = process.env.REACT_APP_API_BASE_URL + 'user/signup';
+            const endpoint = `${REACT_APP_API_BASE_URL}/user/signup`;//process.env.REACT_APP_API_BASE_URL + 'user/signup';
             const responseData = await sendRequest(
                 endpoint,
                 'POST',
