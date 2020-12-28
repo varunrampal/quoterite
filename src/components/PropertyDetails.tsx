@@ -19,7 +19,7 @@ const PropertDetails: React.FC<IProperty> = ({
 
     const handleDelete = (item: string) => {
         
-        confirm({ description: `This will permanently delete ${item}.` })
+        confirm({ description: `This will permanently delete property: ${item}.` })
             .then(() =>  setSuccess(true))
             .catch(() => console.log('Deletion cancelled.'));
     };

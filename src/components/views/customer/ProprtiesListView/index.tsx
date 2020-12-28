@@ -5,7 +5,7 @@ import LazyLoad from 'react-lazyload';
 import { useHttpClient } from '../../../../hooks/http-hook';
 import { AuthContext } from '../../../../context/auth-context';
 import LoadingSpinner from '../../../../ui/LoadingSpinner';
-import { IProperty, PropertyState } from '../../../../types/appTypes';
+import { PropertyState } from '../../../../types/appTypes';
 import AppAccordion from '../../../AppAcordion';
 import AppBreadCrumb from '../../../AppBreadCrumb';
 import Heading from '../../../Header';
@@ -56,7 +56,7 @@ const Properties = () => {
         try {
             // const endpoint =
             //     process.env.REACT_APP_API_BASE_URL + 'customer/properties';
-            const endpoint = REACT_APP_API_BASE_URL + 'customer/properties';
+            const endpoint = `${REACT_APP_API_BASE_URL}/customer/properties`;
             const responseData = await sendRequest(
                 endpoint,
                 'POST',
@@ -71,10 +71,10 @@ const Properties = () => {
             );
 
             if (responseData.code === 200) {
-                const propertyDetails: IProperty[] =
-                    responseData.results.properties;
+                // const propertyDetails: IProperty[] =
+                //     responseData.results.properties;
                
-                //setProperties(propertyDetails);
+                // //setProperties(propertyDetails);
 
                 const propertyState: PropertyState = {
                     properties: responseData.results.properties,
