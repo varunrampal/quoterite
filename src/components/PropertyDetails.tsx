@@ -1,9 +1,12 @@
-import { Box, Grid, IconButton, Tooltip } from '@material-ui/core';
+import { Box, IconButton, Tooltip } from '@material-ui/core';
 import React, { useState } from 'react';
 import { IProperty } from '../types/appTypes';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
+import LocalMallIcon from '@material-ui/icons/LocalMall';
 import AssignmentIcon from '@material-ui/icons/Assignment';
+import RoomIcon from '@material-ui/icons/Room';
+import PlaylistAddCheckIcon from '@material-ui/icons/PlaylistAddCheck';
 import { useConfirm } from 'material-ui-confirm';
 import SuccessModal from './SuccessModal';
 const PropertDetails: React.FC<IProperty> = ({
@@ -11,32 +14,33 @@ const PropertDetails: React.FC<IProperty> = ({
     address,
     email,
     phone,
-    name
+    name,
 }) => {
     const confirm = useConfirm();
     const [success, setSuccess] = useState<boolean>(false);
     const message = 'Property deleted successfully';
 
+    //handle delete icon click
     const handleDelete = (item: string) => {
-        
-        confirm({ description: `This will permanently delete property: ${item}.` })
-            .then(() =>  setSuccess(true))
+        confirm({
+            description: `This will permanently delete property: ${item}.`,
+        })
+            .then(() => setSuccess(true))
             .catch(() => console.log('Deletion cancelled.'));
     };
     const clearSuccess = () => {
         setSuccess(false);
-     
     };
 
+    //handle quote icon click
     const handleQuote = (propertyId: string) => {
-
-          alert('go to create quote page');
-    }
+        alert('go to create quote page');
+    };
 
     const propertyAddress = `${address.street}, ${address.city}, ${address.state} ${address.postcode}`;
     return (
         <div style={{ width: '100%' }} key={__id}>
-              <SuccessModal
+            <SuccessModal
                 success={success}
                 successMessage={message}
                 onClear={clearSuccess}
@@ -76,16 +80,39 @@ const PropertDetails: React.FC<IProperty> = ({
                 p={0}
                 bgcolor="background.paper"
             >
-                  <Box>
-                <Tooltip title="Create quote" arrow>
-                    <IconButton aria-label="quote" onClick={() => handleQuote(__id)}>
-                        <AssignmentIcon />
-                    </IconButton>
+                 <Box>
+                    <Tooltip title="Orders" arrow>
+                        <IconButton
+                            aria-label="orders"
+                            onClick={() => handleQuote(__id)}
+                        >
+                            <LocalMallIcon />
+                        </IconButton>
                     </Tooltip>
-                   
                 </Box>
                 <Box>
-                    <Tooltip title="Edit" arrow>
+                    <Tooltip title="quotes" arrow>
+                        <IconButton
+                            aria-label="quotes"
+                            onClick={() => handleQuote(__id)}
+                        >
+                            <AssignmentIcon />
+                        </IconButton>
+                    </Tooltip>
+                </Box>
+                <Box>
+                    <Tooltip title="Create new quote" arrow>
+                        <IconButton
+                            aria-label="create quotes"
+                            onClick={() => handleQuote(__id)}
+                        >
+                            <PlaylistAddCheckIcon />
+                        </IconButton>
+                    </Tooltip>
+                </Box>
+         
+                <Box>
+                    <Tooltip title="Edit property" arrow>
                         <IconButton
                             aria-label="edit"
                             onClick={() => alert('go to edit page')}
@@ -95,14 +122,15 @@ const PropertDetails: React.FC<IProperty> = ({
                     </Tooltip>
                 </Box>
                 <Box>
-                <Tooltip title="Delete" arrow>
-                    <IconButton aria-label="delete" onClick={() => handleDelete(name)}>
-                        <DeleteIcon />
-                    </IconButton>
+                    <Tooltip title="Delete property" arrow>
+                        <IconButton
+                            aria-label="delete"
+                            onClick={() => handleDelete(name)}
+                        >
+                            <DeleteIcon />
+                        </IconButton>
                     </Tooltip>
-                   
                 </Box>
-              
             </Box>
         </div>
     );
