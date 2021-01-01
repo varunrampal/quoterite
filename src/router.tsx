@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react';
-import { BrowserRouter, Route, Switch, Redirect, useRouteMatch } from 'react-router-dom';
+import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 import Login from './components/views/auth/login';
 import Signup from './components/views/auth/signup';
 import { AuthContext } from './context/auth-context';
@@ -7,14 +7,15 @@ import { useAuth } from './hooks/auth-hook';
 import DashboardView from './components/views/admin/DashboardView';
 import CustomerDashboardView from './components/views/customer/DashboardView';
 import CustomerAccountView from './components/views/customer/AccountView';
-import CustomerPropertiesView from './components/views/customer/ProprtiesListView';
+import CustomerPropertiesView from './components/views/customer/Properties/ProprtiesListView';
+import CreateQuoteView from './components/views/customer/Quotes/create';
 import AdminLayoutRoute from './layouts/AdminLayout';
 import NotFoundView from './components/views/errors/NotFoundView';
 import ThemeProvider from './theme/ThemeProvider';
 import CustomerListView from './components/views/admin/CustomerListView';
 
+
 const Router = () => {
-   
     let routes;
     const {
         token,
@@ -45,7 +46,6 @@ const Router = () => {
             </Switch>
         );
     } else if (token && userRole === 1) {
-      
         routes = (
             <ThemeProvider>
                 <Switch>
@@ -62,7 +62,6 @@ const Router = () => {
             </ThemeProvider>
         );
     } else if (token && userRole === 0) {
-       
         routes = (
             <ThemeProvider>
                 <Switch>
@@ -79,7 +78,15 @@ const Router = () => {
                     <AdminLayoutRoute
                         path="/customer/account/manageproperties"
                         component={CustomerPropertiesView}
-                        
+                        exact
+                    />
+                     <AdminLayoutRoute
+                        path="/customer/quote/createquote"
+                        component={CreateQuoteView}
+                    />
+                     <AdminLayoutRoute
+                        path="/customer/account/manageproperties/createquote"
+                        component={CreateQuoteView}
                     />
 
                     <AdminLayoutRoute path="*" component={NotFoundView} />

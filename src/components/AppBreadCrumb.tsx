@@ -28,7 +28,7 @@ const AppBreadCrumb: React.FC<IProps> = (props) => {
  
     pathnames.forEach((x: string) => {if (x.includes("customer") || x.includes("admin")) results.push(x)});
     pathnames = pathnames.filter((x: string) => x !== 'customer' && x !== 'admin');
-     
+       
     return(
     <Breadcrumbs aria-label = "breadcrumb" maxItems={4}>
         {  
@@ -64,6 +64,9 @@ const AppBreadCrumb: React.FC<IProps> = (props) => {
                 case 'manageproperties':
                     displayName = 'Manage properties';
                     break;
+                case 'createquote':
+                      displayName = 'Create quote';
+                      break;
               }
 
               if(name !== 'dashboard') {

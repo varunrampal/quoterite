@@ -24,7 +24,7 @@ export interface ITiles {
 }
 
 export interface IProperty {
-    __id: string;
+    _id: string;
     custmail: string;
     name: string;
     address: {
@@ -45,6 +45,7 @@ export type PropertyState = {
     totalRecords: number;
     filterRecords: boolean;
     searchStr: string;
+    selectedProperty?: any
 };
 
 

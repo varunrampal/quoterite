@@ -7,6 +7,7 @@ export type PropertyState = {
     totalRecords: number;
     filterRecords: boolean;
     searchStr: string;
+    selectedProperty: {}
 };
 interface GetPropertiesActionType {
     type: typeof GET_PROPERTIES;

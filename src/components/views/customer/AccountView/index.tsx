@@ -27,8 +27,7 @@ const useStyles = makeStyles((theme) => ({
 const Account = () => {
     const classes = useStyles();
     let { url } = useRouteMatch();
-    console.log(url);
-   
+    
     return (
         <Page className={classes.root} title="Dashboard">
             <Container maxWidth={false}>

@@ -50,6 +50,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "start": "cd server && npm start"
+   
  },
   "eslintConfig": {
     "extends": "react-app"

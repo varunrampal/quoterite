@@ -1,24 +1,24 @@
 import { Box, Container, makeStyles } from '@material-ui/core';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import LazyLoad from 'react-lazyload';
-import { useHttpClient } from '../../../../hooks/http-hook';
-import { AuthContext } from '../../../../context/auth-context';
-import LoadingSpinner from '../../../../ui/LoadingSpinner';
-import { PropertyState } from '../../../../types/appTypes';
-import AppAccordion from '../../../AppAcordion';
-import AppBreadCrumb from '../../../AppBreadCrumb';
-import Heading from '../../../Header';
-import Page from '../../../page';
-import PropertDetails from '../../../PropertyDetails';
+import { useHttpClient } from '../../../../../hooks/http-hook';
+import { AuthContext } from '../../../../../context/auth-context';
+import LoadingSpinner from '../../../../../ui/LoadingSpinner';
+import { PropertyState } from '../../../../../types/appTypes';
+import AppAccordion from '../../../../AppAcordion';
+import AppBreadCrumb from '../../../../AppBreadCrumb';
+import Heading from '../../../../Header';
+import Page from '../../../../page';
+import PropertDetails from '../../../../PropertyDetails';
 import { ConfirmProvider } from 'material-ui-confirm';
-import { AppState } from '../../../../stores/root-reducer';
+import { AppState } from '../../../../../stores/root-reducer';
 import {
     getProperties
     
-} from '../../../../stores/property/PropertiesActions';
+} from '../../../../../stores/property/PropertiesActions';
 import Toolbar from './ToolBar';
-import {REACT_APP_API_BASE_URL} from '../../../../utils/constants';
+import {REACT_APP_API_BASE_URL} from '../../../../../utils/constants';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -80,8 +80,9 @@ const Properties = () => {
                     properties: responseData.results.properties,
                     totalRecords: responseData.results.totalRecords,
                     filterRecords: false,
-                    searchStr: '',
-                };
+                    searchStr: ''
+                   
+                    };
                 dispatch(getProperties(propertyState));
             }
         } catch (error) {
@@ -110,6 +111,7 @@ const Properties = () => {
                 {properties.length > 0 ? (
                     <Box mt={3}>
                         {properties.map((property, i) => (
+                        
                             <LazyLoad
                                 key={i}
                                 height={100}
@@ -119,11 +121,11 @@ const Properties = () => {
                                 <ConfirmProvider>
                                     <AppAccordion
                                         heading={property.name}
-                                        key={property.__id}
+                                        key={property._id}
                                     >
                                         <PropertDetails
                                             key={i}
-                                            __id={property.__id}
+                                            _id={property._id}
                                             address={property.address}
                                             custmail={property.custmail}
                                             name={property.name}

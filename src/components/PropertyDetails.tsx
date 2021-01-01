@@ -1,5 +1,6 @@
 import { Box, IconButton, Tooltip } from '@material-ui/core';
 import React, { useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import { IProperty } from '../types/appTypes';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
@@ -8,8 +9,11 @@ import AssignmentIcon from '@material-ui/icons/Assignment';
 import PlaylistAddCheckIcon from '@material-ui/icons/PlaylistAddCheck';
 import { useConfirm } from 'material-ui-confirm';
 import SuccessModal from './SuccessModal';
+import { selectedProperty } from '../stores/property/PropertiesActions';
+import { useDispatch } from 'react-redux';
+
 const PropertDetails: React.FC<IProperty> = ({
-    __id,
+    _id,
     address,
     email,
     phone,
@@ -18,6 +22,8 @@ const PropertDetails: React.FC<IProperty> = ({
     const confirm = useConfirm();
     const [success, setSuccess] = useState<boolean>(false);
     const message = 'Property deleted successfully';
+    const history = useHistory();
+    const dispatch = useDispatch();
 
     //handle delete icon click
     const handleDelete = (item: string) => {
@@ -33,12 +39,14 @@ const PropertDetails: React.FC<IProperty> = ({
 
     //handle quote icon click
     const handleQuote = (propertyId: string) => {
-        alert('go to create quote page');
+       
+        dispatch(selectedProperty(propertyId));
+        history.push('/customer/account/manageproperties/createquote');
     };
 
     const propertyAddress = `${address.street}, ${address.city}, ${address.state} ${address.postcode}`;
     return (
-        <div style={{ width: '100%' }} key={__id}>
+        <div style={{ width: '100%' }} key={_id}>
             <SuccessModal
                 success={success}
                 successMessage={message}
@@ -79,7 +87,7 @@ const PropertDetails: React.FC<IProperty> = ({
                 p={0}
                 bgcolor="background.paper"
             >
-                 <Box>
+                <Box>
                     <Tooltip title="Orders" arrow>
                         <IconButton
                             aria-label="orders"
@@ -103,13 +111,13 @@ const PropertDetails: React.FC<IProperty> = ({
                     <Tooltip title="Create new quote" arrow>
                         <IconButton
                             aria-label="create quotes"
-                            onClick={() => handleQuote(__id)}
+                            onClick={() => handleQuote(_id)}
                         >
                             <PlaylistAddCheckIcon />
                         </IconButton>
                     </Tooltip>
                 </Box>
-         
+
                 <Box>
                     <Tooltip title="Edit property" arrow>
                         <IconButton
