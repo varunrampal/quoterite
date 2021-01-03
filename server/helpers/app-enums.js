@@ -14,6 +14,12 @@
         PDF: 'pdf',
         CSV: 'csv',
         
+     },
+     MODULETYPE: {
+        QUOTE: 'quote',
+        Invoice: 'invoice',
+        Order: 'order',
+        Delivery: 'delivery'
      }
 
 }

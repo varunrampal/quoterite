@@ -5,6 +5,7 @@ import {
     CardActionArea,
     CardContent,
     Container,
+    Grid,
     makeStyles,
     Typography,
 } from '@material-ui/core';
@@ -19,6 +20,8 @@ import { AppState } from '../../../../stores/root-reducer';
 import { IProperty } from '../../../../types/appTypes';
 import DynamicInput from '../../../DynamicInput';
 import QuoteHeader from '../../../QuoteHeader';
+import AppTimeLine from '../../../AppTimeLine';
+import { ModuleType } from '../../../../enums/app-enums';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -61,33 +64,41 @@ const CreateQuote = () => {
     }
 
     return (
-        <Page className={classes.root} title="Manage Properties">
+        <Page className={classes.root} title="Create Quote">
             {isLoading && <LoadingSpinner asOverlay />}
             <Container maxWidth={false}>
                 <Box m={1} p={2}>
                     <Heading heading="Create Quote"></Heading>
                     <AppBreadCrumb></AppBreadCrumb>
                 </Box>
-                <Box m={1} p={2}>
-                    <QuoteHeader propertyObj = {propertyObj} type={'new'}></QuoteHeader>
-                  
-                </Box>
-                <Box m={1} p={2}>
-                    <Card>
-                        <CardActionArea component="div" disableRipple>
-                            <CardContent>
-                                <Typography
-                                    gutterBottom
-                                    variant="h5"
-                                    component="h2"
-                                >
-                                    Add Product/Item/Service
-                                </Typography>
-                                <DynamicInput handleSubmit={handleSubmitClick}></DynamicInput>
-                            </CardContent>
-                        </CardActionArea>
-                    </Card>
-                </Box>
+                <Grid item container direction="row">
+                <Grid item xs={9}>
+                    <Box m={1} p={2}>
+                        <QuoteHeader propertyObj = {propertyObj} type={'new'}></QuoteHeader>
+                    </Box>
+                    <Box m={1} p={2}>
+                        <Card>
+                            <CardActionArea component="div" disableRipple>
+                                <CardContent>
+                                    <Typography
+                                        gutterBottom
+                                        variant="h5"
+                                        component="h2"
+                                    >
+                                        Add Product/Item/Service
+                                    </Typography>
+                                    <DynamicInput handleSubmit={handleSubmitClick}></DynamicInput>
+                                </CardContent>
+                            </CardActionArea>
+                        </Card>
+                    </Box>
+                </Grid>
+                <Grid item xs={3}>
+                    <AppTimeLine moduleType={ModuleType.Quote} quoteDate = {new Date()}></AppTimeLine>
+                </Grid>
+                </Grid>
+
+               
               
             </Container>
         </Page>

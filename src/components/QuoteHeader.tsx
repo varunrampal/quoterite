@@ -89,7 +89,7 @@ const QuoteHeader: React.FC<IProps> = ({ propertyObj, type }) => {
                             </Typography>
                             <Box m={1} p={2}>
                                 <Grid item container direction="row">
-                                    <Grid item xs={8}>
+                                    <Grid item xs={6}>
                                         <Typography
                                             gutterBottom
                                             variant="h5"
@@ -105,7 +105,7 @@ const QuoteHeader: React.FC<IProps> = ({ propertyObj, type }) => {
                                             1
                                         </Typography>
                                     </Grid>
-                                    <Grid item xs={4} direction="row">
+                                    <Grid item xs={6} direction="row">
                                         {type === 'new' ? (
                                             <React.Fragment>
                                                 <Typography
