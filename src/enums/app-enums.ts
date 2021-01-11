@@ -9,7 +9,7 @@ export enum ModuleType {
 
 export enum OrderType {
     Delivery = "DELIVERY",
-    Pickup="PICKup"
+    Pickup="PICKUP"
  }
 
 
