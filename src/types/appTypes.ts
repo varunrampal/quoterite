@@ -48,5 +48,12 @@ export type PropertyState = {
     selectedProperty?: any
 };
 
+//Item
+export interface IItem {
+    id: number;
+    name: string;
+    qty?: number;
+}
+
 
 

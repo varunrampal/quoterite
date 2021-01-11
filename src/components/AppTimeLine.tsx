@@ -19,9 +19,15 @@ import { ModuleType } from '../enums/app-enums';
 const useStyles = makeStyles((theme) => ({
     paper: {
         padding: '6px 16px',
+        height: '40px'
+    },
+    primaryTail: {
+        backgroundColor: theme.palette.primary.light,
+        height: 70
     },
     secondaryTail: {
         backgroundColor: theme.palette.secondary.main,
+        height: 70
     },
 }));
 
@@ -79,9 +85,14 @@ const AppTimeline: React.FC<IProps> = ({
                             <AssignmentIcon />
                         </TimelineDot>
                     )}
+                    {quoteDate !== undefined ? (
+                        <TimelineConnector className={classes.secondaryTail} />
+                    ) : (
+                        <TimelineConnector className={classes.primaryTail}/>
+                    )}
                 </TimelineSeparator>
                 <TimelineContent>
-                    <Paper elevation={3} className={classes.paper}>
+                    <Paper elevation={3} className={classes.paper} style={{width:80}}>
                         <Typography variant="h6" component="h1">
                             Quote
                         </Typography>
@@ -107,10 +118,14 @@ const AppTimeline: React.FC<IProps> = ({
                         </TimelineDot>
                     )}
 
-                    <TimelineConnector />
+                    {invoiceDate !== undefined ? (
+                        <TimelineConnector className={classes.secondaryTail} />
+                    ) : (
+                        <TimelineConnector className={classes.primaryTail} />
+                    )}
                 </TimelineSeparator>
                 <TimelineContent>
-                    <Paper elevation={3} className={classes.paper}>
+                    <Paper elevation={3} className={classes.paper} style={{width:80}}> 
                         <Typography variant="h6" component="h1">
                             Invoice
                         </Typography>
@@ -118,7 +133,7 @@ const AppTimeline: React.FC<IProps> = ({
                 </TimelineContent>
             </TimelineItem>
             <TimelineItem>
-            {orderDate && (
+                {orderDate && (
                     <TimelineOppositeContent>
                         <Typography variant="body2" color="textSecondary">
                             <Moment format="YYYY/MM/DD">{new Date()}</Moment>
@@ -135,10 +150,14 @@ const AppTimeline: React.FC<IProps> = ({
                             <LocalMallIcon />
                         </TimelineDot>
                     )}
-                    <TimelineConnector className={classes.secondaryTail} />
+                     {orderDate !== undefined ? (
+                        <TimelineConnector className={classes.secondaryTail} />
+                    ) : (
+                        <TimelineConnector className={classes.primaryTail} />
+                    )}
                 </TimelineSeparator>
                 <TimelineContent>
-                    <Paper elevation={3} className={classes.paper}>
+                    <Paper elevation={3} className={classes.paper} style={{width:80}}>
                         <Typography variant="h6" component="h1">
                             Order
                         </Typography>
@@ -146,7 +165,7 @@ const AppTimeline: React.FC<IProps> = ({
                 </TimelineContent>
             </TimelineItem>
             <TimelineItem>
-            {deliveryDate && (
+                {deliveryDate && (
                     <TimelineOppositeContent>
                         <Typography variant="body2" color="textSecondary">
                             <Moment format="YYYY/MM/DD">{new Date()}</Moment>
@@ -154,20 +173,19 @@ const AppTimeline: React.FC<IProps> = ({
                     </TimelineOppositeContent>
                 )}
                 <TimelineSeparator>
-                   
-                        {currModule === ModuleType.Delivery ? (
-                            <TimelineDot color="primary">
-                                <LocalShippingIcon />
-                            </TimelineDot>
-                        ) : (
-                            <TimelineDot>
-                                <LocalShippingIcon />
-                            </TimelineDot>
-                        )}
-                
+                    {currModule === ModuleType.Delivery ? (
+                        <TimelineDot color="primary">
+                            <LocalShippingIcon />
+                        </TimelineDot>
+                    ) : (
+                        <TimelineDot>
+                            <LocalShippingIcon />
+                        </TimelineDot>
+                    )}
+                    
                 </TimelineSeparator>
                 <TimelineContent>
-                    <Paper elevation={3} className={classes.paper}>
+                    <Paper elevation={3} className={classes.paper} style={{width:120}}>
                         <Typography variant="h6" component="h1">
                             Delivery/Pickup
                         </Typography>

@@ -28,7 +28,7 @@ const {
 //const upload = multer({ storage: storage });
 const express = require('express');
 const router = express.Router();
-//const checkAuth = require('../middleware/check-auth');
+const checkAuth = require('../middleware/check-auth');
 
 const usersController = require('../controllers/users-controller');
 // const chartController = require('../controllers/chart-controller');
@@ -77,7 +77,7 @@ router.post(
 //     }
 // });
 
-// router.use(checkAuth);
+router.use(checkAuth);
 
 // router.get('/receipts/:duration&:timezone', usersController.getAllReceipt);
 
@@ -97,8 +97,8 @@ router.get(
     '/total/:role',
      usersController.getTotalUsers
 );
-// router.post('/update', usersController.updateUser);
-// router.post('/update/multi', usersController.updateUsers);
+router.post('/update', usersController.updateUser);
+router.post('/update/multi', usersController.updateUsers);
 router.get(
     '/filter/:role&:page&:pagination&:value',
      usersController.FilterUsersByNameOrEmail

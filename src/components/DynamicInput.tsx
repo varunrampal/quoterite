@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { TextField, Grid, Box } from '@material-ui/core';
 import Button from '../ui/Button';
+import AppAutoComplete from './AppAutoComplete';
+import { ReactSearchAutocomplete } from 'react-search-autocomplete';
 
 interface IProps {
     handleSubmit: (value: any) => void;
@@ -9,12 +11,13 @@ interface IProps {
 const DynamicInput: React.FC<IProps> = ({ handleSubmit, ...rest }) => {
     const [inputList, setInputList] = useState([{ item: '', qty: '' }]);
 
-    // handle input change
+        // handle input change
     const handleInputChange = (e, index) => {
         const { name, value } = e.target;
         const list = [...inputList];
         list[index][name] = value;
         setInputList(list);
+        console.log(list);
     };
 
     // handle click event of the Remove button
@@ -29,15 +32,13 @@ const DynamicInput: React.FC<IProps> = ({ handleSubmit, ...rest }) => {
         setInputList([...inputList, { item: '', qty: '' }]);
     };
 
-    const handleSubmitClick = () => {
-        handleSubmit(inputList);
-    };
-
+  
     return (
         <div>
+                      
             {inputList.map((x, i) => {
                 return (
-                    <div>
+                    <Box m={1} p={2}>
                         <Grid container spacing={2}>
                             <Grid item xs={3}>
                                 <TextField
@@ -48,6 +49,7 @@ const DynamicInput: React.FC<IProps> = ({ handleSubmit, ...rest }) => {
                                     placeholder="Enter item name"
                                     onChange={(e) => handleInputChange(e, i)}
                                 />
+                                                
                             </Grid>
                             <Grid item xs={3}>
                                 <TextField
@@ -85,23 +87,22 @@ const DynamicInput: React.FC<IProps> = ({ handleSubmit, ...rest }) => {
                                     )}
                                 </div>
                             </Grid>
-                          
                         </Grid>
-                    </div>
+                   </Box>
                 );
             })}
-              <Box m={1} p={0}>
-                                <Button
-                                    btnCat="success"
-                                    type="button"
-                                    size="large"
-                                    variant="contained"
-                                    onClick={handleSubmitClick}
-                                >
-                                    Submit
-                                </Button>
-                            </Box>
-            {/* <div style={{ marginTop: 20 }}>{JSON.stringify(inputList)}</div> */}
+            {/* <Box m={1} p={1}>
+                <Button
+                    btnCat="success"
+                    type="button"
+                    size="large"
+                    variant="contained"
+                    onClick={handleSubmitClick}
+                >
+                    Submit
+                </Button>
+            </Box> */}
+            <div style={{ marginTop: 20 }}>{JSON.stringify(inputList)}</div>
         </div>
     );
 };

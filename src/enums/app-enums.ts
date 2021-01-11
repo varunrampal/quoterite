@@ -7,4 +7,9 @@ export enum ModuleType {
     Properties = "PROPERTIES"
 }
 
+export enum OrderType {
+    Delivery = "DELIVERY",
+    Pickup="PICKup"
+ }
+
 

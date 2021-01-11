@@ -5,6 +5,8 @@ import './App.css';
 import { ThemeProvider } from '@material-ui/core';
 // import theme from './theme/admin-theme';
 import Router from './router';
+import { MuiPickersUtilsProvider } from 'material-ui-pickers';
+import DateFnsUtils from '@date-io/date-fns';
 
 const App = () => {
     //  const routing = useRoutes(routes);
@@ -45,7 +47,9 @@ const App = () => {
         //     </Suspense>
         // </BrowserRouter>
         // <ThemeProvider theme={theme}>
+        <MuiPickersUtilsProvider utils={DateFnsUtils}>
             <Router />
+            </MuiPickersUtilsProvider>
         // </ThemeProvider>
 
     );

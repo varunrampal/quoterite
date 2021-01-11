@@ -7,7 +7,7 @@ import classNames from 'classnames';
 
 interface IButtonProps extends ButtonProps {
     classes: any;
-    btnCat: 'success' | 'danger' | 'login';
+    btnCat?: 'success' | 'danger' | 'login';
     variant: 'contained' | 'outlined';
     size: 'small' | 'medium' | 'large';
     fullWidth?: boolean;

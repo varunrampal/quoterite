@@ -13,6 +13,7 @@ const usersRoutes = require('../routes/users-routes');
 // const receiptRoutes = require('../routes/receipt-routes');
 // const s3routes = require('../routes/s3-routes');
 const propertyRoutes = require('../routes/property-routes');
+const itemRoutes = require('../routes/item-routes');
 
 module.exports = function (app) {
    app.use(bodyParser.json({limit: '50mb'}));
@@ -32,6 +33,7 @@ module.exports = function (app) {
     // app.use('/api/receipt', receiptRoutes); // => /api/receipt...
     // app.use('/api/sign_s3', s3routes); // => /api/sign_s3
     app.use('/api/customer', propertyRoutes); // => /api/customer/properties...
+    app.use('/api/item', itemRoutes);
     // app.use('/kue-api/', kue.app);
 
     // handle 404 error(route not found)
