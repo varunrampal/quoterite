@@ -1,3 +1,4 @@
+import { OrderTransportType, QuoteStatus, QuoteType } from './../enums/app-enums';
 import { Icon } from 'react-feather';
 export interface ICustomer {
     _id: string;
@@ -52,8 +53,19 @@ export type PropertyState = {
 export interface IItem {
     id: number;
     name: string;
-    qty?: number;
+    quantity?: number;
 }
 
-
+//Quote
+export interface IQuote {
+    submitedBy: string;
+    property: string;
+    items: IItem[];
+    notes: string;
+    type: QuoteType;
+    createDate: string;
+    status: QuoteStatus;
+    transportType: OrderTransportType;
+    transportDate: String;
+}
 

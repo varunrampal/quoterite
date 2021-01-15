@@ -7,9 +7,24 @@ export enum ModuleType {
     Properties = "PROPERTIES"
 }
 
-export enum OrderType {
+export enum OrderTransportType {
     Delivery = "DELIVERY",
     Pickup="PICKUP"
  }
+
+ export enum QuoteStatus {
+    Open = "OPEN",
+    Closed = "CLOSED",
+    Replied= "REPLIED",
+    
+ }
+
+ export enum QuoteType {
+    Property = "PROPERTY",
+    INdividual = "INDIVIDUAL",
+  
+ }
+
+
 
 

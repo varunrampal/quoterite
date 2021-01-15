@@ -7,45 +7,43 @@ import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      width: '100%',
-      padding: theme.spacing(1, 1),
-    },
-    heading: {
-      fontSize: theme.typography.pxToRem(15),
-      fontWeight: theme.typography.fontWeightRegular,
-    },
-  }),
+    createStyles({
+        root: {
+            width: '100%',
+            padding: theme.spacing(1, 1),
+        },
+        heading: {
+            fontSize: theme.typography.pxToRem(15),
+            fontWeight: theme.typography.fontWeightRegular,
+        },
+    }),
 );
 
 interface IProps {
-
     heading: string;
     children: ReactNode;
     key: string;
 }
 
-const AppAccordion: React.FC<IProps> = ({heading, children, key}) => {
-  const classes = useStyles();
+const AppAccordion: React.FC<IProps> = ({ heading, children, key }) => {
+    const classes = useStyles();
 
-  return (
-    <div className={classes.root}>
-      <Accordion key = {key}>
-        <AccordionSummary
-          expandIcon={<ExpandMoreIcon />}
-          aria-controls="panel1a-content"
-          id={key}
-        >
-          <Typography className={classes.heading}>{heading}</Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-         {children}
-        </AccordionDetails>
-      </Accordion>
-      
-    </div>
-  );
-}
+    return (
+        <div className={classes.root}>
+            <Accordion key={key}>
+                <AccordionSummary
+                    expandIcon={<ExpandMoreIcon />}
+                    aria-controls="panel1a-content"
+                    id={key}
+                >
+                    <Typography className={classes.heading}>
+                        {heading}
+                    </Typography>
+                </AccordionSummary>
+                <AccordionDetails>{children}</AccordionDetails>
+            </Accordion>
+        </div>
+    );
+};
 
 export default AppAccordion;

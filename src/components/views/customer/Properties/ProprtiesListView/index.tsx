@@ -13,12 +13,9 @@ import Page from '../../../../page';
 import PropertDetails from '../../../../PropertyDetails';
 import { ConfirmProvider } from 'material-ui-confirm';
 import { AppState } from '../../../../../stores/root-reducer';
-import {
-    getProperties
-    
-} from '../../../../../stores/property/PropertiesActions';
+import { getProperties } from '../../../../../stores/property/PropertiesActions';
 import Toolbar from './ToolBar';
-import {REACT_APP_API_BASE_URL} from '../../../../../utils/constants';
+import { REACT_APP_API_BASE_URL } from '../../../../../utils/constants';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -44,12 +41,9 @@ const Properties = () => {
     const { isLoading, sendRequest } = useHttpClient();
 
     const dispatch = useDispatch();
-    const {
-        properties,
-        totalRecords,
-        filterRecords,
-        searchStr,
-    } = useSelector((state: AppState) => state.properties);
+    const { properties, totalRecords, filterRecords, searchStr } = useSelector(
+        (state: AppState) => state.properties,
+    );
 
     //Load all properties
     const loadProperties = async () => {
@@ -73,16 +67,15 @@ const Properties = () => {
             if (responseData.code === 200) {
                 // const propertyDetails: IProperty[] =
                 //     responseData.results.properties;
-               
+
                 // //setProperties(propertyDetails);
 
                 const propertyState: PropertyState = {
                     properties: responseData.results.properties,
                     totalRecords: responseData.results.totalRecords,
                     filterRecords: false,
-                    searchStr: ''
-                   
-                    };
+                    searchStr: '',
+                };
                 dispatch(getProperties(propertyState));
             }
         } catch (error) {
@@ -93,9 +86,7 @@ const Properties = () => {
         loadProperties();
     }, [dispatch]);
 
-    const handlePropertiesSearch = async (value: string) => {
-
-    }
+    const handlePropertiesSearch = async (value: string) => {};
 
     return (
         <Page className={classes.root} title="Manage Properties">
@@ -106,12 +97,11 @@ const Properties = () => {
                     <AppBreadCrumb></AppBreadCrumb>
                 </Box>
                 <Box mt={3}>
-                <Toolbar filterProperties={handlePropertiesSearch} />
+                    <Toolbar filterProperties={handlePropertiesSearch} />
                 </Box>
                 {properties.length > 0 ? (
                     <Box mt={3}>
                         {properties.map((property, i) => (
-                        
                             <LazyLoad
                                 key={i}
                                 height={100}

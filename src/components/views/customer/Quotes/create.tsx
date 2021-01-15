@@ -6,6 +6,7 @@ import {
     IconButton,
     makeStyles,
     Radio,
+    TextareaAutosize,
     TextField,
     Tooltip,
 } from '@material-ui/core';
@@ -13,7 +14,7 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
 import DeleteIcon from '@material-ui/icons/Delete';
-import _, { xor } from 'lodash';
+import _ from 'lodash';
 import { useHttpClient } from '../../../../hooks/http-hook';
 import { AuthContext } from '../../../../context/auth-context';
 import Page from '../../../page';
@@ -22,10 +23,10 @@ import Heading from '../../../Header';
 import AppBreadCrumb from '../../../AppBreadCrumb';
 import { useSelector } from 'react-redux';
 import { AppState } from '../../../../stores/root-reducer';
-import { IProperty } from '../../../../types/appTypes';
+import { IProperty, IQuote } from '../../../../types/appTypes';
 import QuoteHeader from '../../../QuoteHeader';
 import AppTimeLine from '../../../AppTimeLine';
-import { ModuleType, OrderType } from '../../../../enums/app-enums';
+import { ModuleType, OrderTransportType, QuoteType, QuoteStatus } from '../../../../enums/app-enums';
 import Button from '../../../../ui/Button';
 import { ReactSearchAutocomplete } from 'react-search-autocomplete';
 import { Scrollbars } from 'rc-scrollbars';
@@ -34,6 +35,9 @@ import { REACT_APP_API_BASE_URL, ITEMTYPE } from '../../../../utils/constants';
 import { IItem } from '.././../../../types/appTypes';
 import AppAccordion from '../../../AppAcordion';
 import { InlineDateTimePicker } from 'material-ui-pickers';
+import moment from 'moment';
+import SuccessModal from '../../../SuccessModal';
+import ErrorModal from '../../../../ui/ErrorModal';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -62,17 +66,22 @@ const useStyles = makeStyles((theme) => ({
 const CreateQuote = () => {
     const classes = useStyles();
     const auth = useContext(AuthContext);
-    const { isLoading, sendRequest } = useHttpClient();
+    const { isLoading, sendRequest, error, clearError } = useHttpClient();
     const [openDialog, setOpenDialog] = useState<boolean>(false);
     const [dialogContent, setDialogContent] = useState<string>('');
     const [items, setItems] = useState<IItem[]>([]);
     const [inputList, setInputList] = useState<IItem[]>([]);
-    const [orderType, setOrderType] = React.useState<any>(OrderType.Delivery);
+    const [orderType, setOrderType] = React.useState<any>(
+        OrderTransportType.Delivery,
+    );
     const [selectedDeliveryDate, handleDeliveryDate] = useState(null);
     const [selectedPickupDate, handlePickupDate] = useState(null);
+    const [notes, setNotes] = useState<string>('');
+    const [success, setSuccess] = useState<boolean>(false);
+    const [message, setMessage] = useState<string>('');
 
-    const dialogTitle ='Alert';
-    let selectedItem: IItem = { id: 0, name: '', qty: 0 };
+    const dialogTitle = 'Alert';
+    let selectedItem: IItem = { id: 0, name: '', quantity: 0 };
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setOrderType((event.target as HTMLInputElement).value);
@@ -85,10 +94,10 @@ const CreateQuote = () => {
     // handle click event of the Add button
     const handleAddClick = () => {
         if (!_.isEmpty(selectedItem) && selectedItem.name !== '') {
-             const itemExists = inputList.some((x) => x.id === selectedItem.id);
+            const itemExists = inputList.some((x) => x.id === selectedItem.id);
             if (!itemExists) {
                 setInputList([...inputList, selectedItem]);
-                let item: IItem = { id: 0, name: '', qty: 0 };
+                let item: IItem = { id: 0, name: '', quantity: 0 };
                 // setSelectedItem(item);
                 selectedItem = item;
             } else {
@@ -99,7 +108,7 @@ const CreateQuote = () => {
             }
         } else {
             setDialogContent(
-                `Enter new ${ITEMTYPE.toLowerCase()} name to search`,
+                `Enter ${ITEMTYPE.toLowerCase()} name to search`,
             );
             setOpenDialog(true);
         }
@@ -114,9 +123,8 @@ const CreateQuote = () => {
 
     // handle input change
     const handleInputChange = (e, index) => {
-
-        const val = e.target.value.replace(/\D/g, "");
-        e.target.value= val;
+        const val = e.target.value.replace(/\D/g, '');
+        e.target.value = val;
 
         const { name, value } = e.target;
         const list = [...inputList];
@@ -124,43 +132,96 @@ const CreateQuote = () => {
         setInputList(list);
     };
 
+    const clearSuccess = () => {
+        setSuccess(false);
+    };
+
     const handleSubmitClick = async () => {
         if (inputList.length > 0) {
-           
-             let invalidQty = inputList.some(
-                (x) => x.qty === undefined || x.qty === 0);
+            let invalidQty = inputList.some(
+                (x) => x.quantity === undefined || x.quantity === 0,
+            );
 
             if (invalidQty) {
-                setDialogContent(
-                    `Quantity should be greater than 0 and a whole number`,
-                );
+                setDialogContent(`Quantity should be greater than 0.`);
                 setOpenDialog(true);
-            }
-            else{
-                console.log(inputList);
-                console.log(orderType);
+            } else {
+                let orderTransportType: OrderTransportType =
+                    OrderTransportType.Delivery;
 
-                if(orderType === OrderType.Delivery && selectedDeliveryDate === null){
-                    setDialogContent(
-                        `Please select the delivery date`,
-                    );
+                if (
+                    orderType === OrderTransportType.Delivery &&
+                    selectedDeliveryDate === null
+                ) {
+                    setDialogContent(`Please select the delivery date`);
                     setOpenDialog(true);
-                } else if(orderType === OrderType.Pickup && selectedPickupDate === null) {
-                    setDialogContent(
-                        `Please select the delivery date`,
-                    );
+                } else if (
+                    orderType === OrderTransportType.Pickup &&
+                    selectedPickupDate === null
+                ) {
+                    setDialogContent(`Please select the delivery date`);
                     setOpenDialog(true);
-                } else if(orderType === OrderType.Delivery){
+                } else if (orderType === OrderTransportType.Pickup) {
+                    orderTransportType = OrderTransportType.Pickup;
+                } else if (
+                    (selectedPickupDate !== null ||
+                        selectedDeliveryDate !== null) &&
+                    OrderTransportType !== null
+                ) {
+                    const transportDate =
+                        orderTransportType === OrderTransportType.Delivery
+                            ? selectedDeliveryDate
+                            : selectedPickupDate;
 
-                     console.log(selectedDeliveryDate);
-                }else if(orderType === OrderType.Pickup){
-
-                    console.log(selectedPickupDate);
-               }
-
+                    let quoteDetails: IQuote = {
+                        createDate: moment().format('YYYY/MM/DD'),
+                        items: inputList,
+                        notes: notes,
+                        property: propertyObj._id,
+                        status: QuoteStatus.Open,
+                        submitedBy: auth.userId,
+                        transportType: orderTransportType,
+                        transportDate: moment(transportDate).format(
+                            'YYYY/MM/DD HH:mm',
+                        ),
+                        type: QuoteType.Property,
+                    };
+                    saveQuote(quoteDetails);
+                }
             }
         }
     };
+
+    const saveQuote = async (quote: IQuote) => {
+        try {
+            const endpoint = `${REACT_APP_API_BASE_URL}/quote/create`;
+            const responseData = await sendRequest(
+                endpoint,
+                'POST',
+                JSON.stringify(quote),
+                {
+                    'Content-Type': 'application/json',
+                },
+            );
+
+            setSuccess(true);
+            setMessage(
+                `Thank you. We have received your quote and very shortly we will process it.
+                 Your quote id is ${responseData.results.quoteId}`
+            );
+            resetControlls();
+
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
+    const resetControlls = () => {
+        inputList.length = 0;
+        setNotes('');
+        handleDeliveryDate(null);
+        handlePickupDate(null);
+    }
 
     const handleOnSearch = (value: string, cached) => {
         const searchStr = value.trim();
@@ -178,6 +239,10 @@ const CreateQuote = () => {
     };
     const handleDialogClose = () => {
         setOpenDialog(false);
+    };
+    const handleNotesChange = (e) => {
+        const { value } = e.target;
+        setNotes(value);
     };
 
     const getItems = async (searchStr: string) => {
@@ -198,6 +263,14 @@ const CreateQuote = () => {
     };
     return (
         <Page className={classes.root} title="Create Quote">
+             {isLoading && (<LoadingSpinner asOverlay />)}
+            <SuccessModal
+                success={success}
+                successMessage={message}
+                onClear={clearSuccess}
+            />
+            <ErrorModal error={error} onClear={clearError} />
+
             <Container maxWidth={false}>
                 <Box m={1} p={2}>
                     <Heading heading="Create Quote"></Heading>
@@ -216,6 +289,7 @@ const CreateQuote = () => {
                             <Box m={1} p={2} style={{ width: '100%' }}>
                                 <Grid item container direction="row">
                                     <Grid xs={4}>
+                                       
                                         <ReactSearchAutocomplete
                                             items={items}
                                             onSearch={handleOnSearch}
@@ -224,7 +298,7 @@ const CreateQuote = () => {
                                             showIcon={true}
                                             placeholder={`Search ${ITEMTYPE}`}
                                             styling={{
-                                                height: '44px',
+                                                height: '40px',
                                                 border: '1px solid lightgrey',
                                                 borderRadius: '4px',
                                                 backgroundColor: 'white',
@@ -258,8 +332,9 @@ const CreateQuote = () => {
                                                 <Scrollbars
                                                     style={{
                                                         width: '100%',
-                                                        height: 220,
+                                                        height: 200,
                                                     }}
+                                                    autoHide
                                                 >
                                                     <Box
                                                         m={1}
@@ -268,11 +343,6 @@ const CreateQuote = () => {
                                                             width: '100%',
                                                         }}
                                                     >
-                                                        {isLoading && (
-                                                            <LoadingSpinner
-                                                                asOverlay
-                                                            />
-                                                        )}
                                                         {inputList.map(
                                                             (x, i) => {
                                                                 return (
@@ -304,14 +374,13 @@ const CreateQuote = () => {
                                                                             }
                                                                         >
                                                                             <TextField
-                                                                                name="qty"
+                                                                                name="quantity"
                                                                                 type="number"
                                                                                 value={
-                                                                                    x.qty
+                                                                                    x.quantity
                                                                                 }
                                                                                 variant="standard"
                                                                                 placeholder="Enter quantity"
-                                                                               
                                                                                 onChange={(
                                                                                     e,
                                                                                 ) =>
@@ -320,7 +389,9 @@ const CreateQuote = () => {
                                                                                         i,
                                                                                     )
                                                                                 }
-                                                                                defaultValue={0}
+                                                                                defaultValue={
+                                                                                    0
+                                                                                }
                                                                                 required
                                                                             />
                                                                         </Grid>
@@ -360,85 +431,132 @@ const CreateQuote = () => {
                         </AppAccordion>
 
                         {inputList.length > 0 && (
-                            <Box m={2} p={1}>
-                                <Grid container spacing={1}>
-                                    <Grid xs={6}>
-                                        <FormControl component="fieldset">
-                                            <RadioGroup
-                                                aria-label="ordermode"
-                                                name="ordermode"
-                                                value={orderType}
-                                                onChange={handleChange}
-                                            >
-                                                <Grid container spacing={1}>
-                                                    <Grid xs={6}>
-                                                        <FormControlLabel
-                                                            value={OrderType.Delivery}
-                                                            control={<Radio />}
-                                                            label="Delivery"
-                                                        />
-                                                    </Grid>
-                                                    <Grid xs={6}>
-                                                        <InlineDateTimePicker
-                                                            keyboard
-                                                            ampm={false}
-                                                            label="Select delivery date"
-                                                            value={
-                                                                selectedDeliveryDate
-                                                            }
-                                                            onChange={
-                                                                handleDeliveryDate
-                                                            }
-                                                            onError={
-                                                                console.log
-                                                            }
-                                                            disablePast
-                                                            format="yyyy/MM/dd HH:mm"
-                                                        />
-                                                    </Grid>
-                                                    <Grid xs={6}>
-                                                        <FormControlLabel
-                                                            value={OrderType.Pickup}
-                                                            control={<Radio />}
-                                                            label="Pickup"
-                                                        />
-                                                    </Grid>
-                                                    <Grid xs={6}>
-                                                        {/* <DatePicker></DatePicker> */}
-                                                        <InlineDateTimePicker
-                                                            keyboard
-                                                            ampm={false}
-                                                            label="Select pickup date"
-                                                            value={
-                                                                selectedPickupDate
-                                                            }
-                                                            onChange={
-                                                                handlePickupDate
-                                                            }
-                                                            onError={
-                                                                console.log
-                                                            }
-                                                            disablePast
-                                                            format="yyyy/MM/dd HH:mm"
-                                                        />
-                                                    </Grid>
-                                                </Grid>
-                                            </RadioGroup>
-                                        </FormControl>
-                                    </Grid>
-                                </Grid>
-                                <Box m={2} alignItems="right">
-                                    <Button
-                                        type="button"
-                                        size="large"
-                                        color="primary"
-                                        variant="contained"
-                                        onClick={handleSubmitClick}
+                            <React.Fragment>
+                                <AppAccordion
+                                    heading="Select delivery/pickup date"
+                                    key="accordDate"
+                                >
+                                    <Box m={1} p={2} style={{ width: '100%' }}>
+                                        <Grid container spacing={1}>
+                                            <Grid xs={6}>
+                                                <FormControl component="fieldset">
+                                                    <RadioGroup
+                                                        aria-label="ordermode"
+                                                        name="ordermode"
+                                                        value={orderType}
+                                                        onChange={handleChange}
+                                                    >
+                                                        <Grid
+                                                            container
+                                                            spacing={3}
+                                                        >
+                                                            <Grid xs={3}>
+                                                                <FormControlLabel
+                                                                    value={
+                                                                        OrderTransportType.Delivery
+                                                                    }
+                                                                    control={
+                                                                        <Radio />
+                                                                    }
+                                                                    label="Delivery"
+                                                                />
+                                                            </Grid>
+                                                            <Grid xs={9}>
+                                                                <InlineDateTimePicker
+                                                                    keyboard
+                                                                    ampm={false}
+                                                                    label="Select delivery date"
+                                                                    value={
+                                                                        selectedDeliveryDate
+                                                                    }
+                                                                    onChange={
+                                                                        handleDeliveryDate
+                                                                    }
+                                                                    onError={
+                                                                        console.log
+                                                                    }
+                                                                    disablePast
+                                                                    format="yyyy/MM/dd HH:mm"
+                                                                />
+                                                            </Grid>
+                                                            <Grid xs={3}>
+                                                                <FormControlLabel
+                                                                    value={
+                                                                        OrderTransportType.Pickup
+                                                                    }
+                                                                    control={
+                                                                        <Radio />
+                                                                    }
+                                                                    label="Pickup"
+                                                                />
+                                                            </Grid>
+                                                            <Grid xs={9}>
+                                                                {/* <DatePicker></DatePicker> */}
+                                                                <InlineDateTimePicker
+                                                                    keyboard
+                                                                    ampm={false}
+                                                                    label="Select pickup date"
+                                                                    value={
+                                                                        selectedPickupDate
+                                                                    }
+                                                                    onChange={
+                                                                        handlePickupDate
+                                                                    }
+                                                                    onError={
+                                                                        console.log
+                                                                    }
+                                                                    disablePast
+                                                                    format="yyyy/MM/dd HH:mm"
+                                                                />
+                                                            </Grid>
+                                                        </Grid>
+                                                    </RadioGroup>
+                                                </FormControl>
+                                            </Grid>
+                                        </Grid>
+                                    </Box>
+                                </AppAccordion>
+                                <AppAccordion
+                                    heading="Submit quote"
+                                    key="accordSubmit"
+                                >
+                                    <Grid
+                                        container
+                                        spacing={4}
+                                        direction="column"
                                     >
-                                        Submit
-                                    </Button>
-                                </Box>
-                            </Box>
+                                        <Grid
+                                            xs={6}
+                                            style={{
+                                                width: '100%',
+                                                paddingLeft: '6px',
+                                            }}
+                                        >
+                                            <TextareaAutosize
+                                                rowsMax={5}
+                                                rowsMin={4}
+                                                aria-label="notes"
+                                                placeholder="Notes(optional)"
+                                                style={{ width: '100%' }}
+                                                onChange={(e) =>
+                                                    handleNotesChange(e)
+                                                }
+                                            />
+                                        </Grid>
+                                        <Grid xs={6}>
+                                            <Button
+                                                type="button"
+                                                size="large"
+                                                color="primary"
+                                                variant="contained"
+                                                onClick={handleSubmitClick}
+                                            >
+                                                Submit
+                                            </Button>
+                                        </Grid>
+                                    </Grid>
+                                </AppAccordion>
+                            </React.Fragment>
                         )}
 
                         {/* <div style={{ marginTop: 20 }}>
@@ -456,6 +574,7 @@ const CreateQuote = () => {
                     title={dialogTitle}
                     content={dialogContent}
                     open={openDialog}
+                    type="error"
                     onClose={handleDialogClose}
                 ></AppDialog>
             </Container>
