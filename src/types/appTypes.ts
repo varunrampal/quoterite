@@ -58,6 +58,7 @@ export interface IItem {
 
 //Quote
 export interface IQuote {
+    id?: number;
     submitedBy: string;
     property: string;
     items: IItem[];
