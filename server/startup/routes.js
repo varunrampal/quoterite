@@ -15,6 +15,7 @@ const usersRoutes = require('../routes/users-routes');
 const propertyRoutes = require('../routes/property-routes');
 const itemRoutes = require('../routes/item-routes');
 const quoteRoutes = require('../routes/quote-routes');
+const adminDashboardRoutes = require('../routes/admin-dashboard-routes');
 
 module.exports = function (app) {
    app.use(bodyParser.json({limit: '50mb'}));
@@ -36,6 +37,9 @@ module.exports = function (app) {
     app.use('/api/customer', propertyRoutes); // => /api/customer/properties...
     app.use('/api/item', itemRoutes);
     app.use('/api/quote', quoteRoutes);
+    app.use('/api/admin', adminDashboardRoutes);
+
+    
     // app.use('/kue-api/', kue.app);
 
     // handle 404 error(route not found)

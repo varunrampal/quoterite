@@ -1,8 +1,10 @@
 const sgMail = require('@sendgrid/mail');
 const kue = require('kue');
 const queue = kue.createQueue();
-const mongoose = require('mongoose');
 const winston = require('winston');
+const {
+    SENDGRID_API_KEY,
+} = require('../utils/constants');
 
 const {
     appEnums
@@ -24,12 +26,13 @@ const createEmailJob = async (job) => {
 
 //process job added to the queue - its a worker
 queue.process('Send Receipt Email', (job, DoneCallback) => {
+    const {
+        msg
+    } = job.data;
     try {
-        const {
-            msg
-        } = job.data;
+        
         //setup API key
-        sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+        sgMail.setApiKey(SENDGRID_API_KEY);
 
         //Send mail
         sgMail.send(msg).then((result) => {

@@ -18,7 +18,7 @@ const QuoteHeader: React.FC<IProps> = ({ propertyObj, type }) => {
     const propertyAddress = `${propertyObj.address.street}, ${propertyObj.address.city}, ${propertyObj.address.state} ${propertyObj.address.postcode}`;
     return (
         <Grid container spacing={3}>
-            <Grid item xs={8}>
+            <Grid item xs={12}>
                 <Card>
                     <CardActionArea component="div" disableRipple>
                         <CardContent>
@@ -76,7 +76,7 @@ const QuoteHeader: React.FC<IProps> = ({ propertyObj, type }) => {
                     </CardActionArea>
                 </Card>
             </Grid>
-            <Grid item xs={4}>
+            {/* <Grid item xs={4}>
                 <Card>
                     <CardActionArea component="div" disableRipple>
                         <CardContent>
@@ -149,7 +149,7 @@ const QuoteHeader: React.FC<IProps> = ({ propertyObj, type }) => {
                         </CardContent>
                     </CardActionArea>
                 </Card>
-            </Grid>
+            </Grid> */}
         </Grid>
     );
 };

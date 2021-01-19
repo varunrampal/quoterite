@@ -1,18 +1,17 @@
 var aws = require('aws-sdk');
 const winston = require('winston');
-
-require('dotenv').config({
-    path: `.env.${process.env.NODE_ENV}.local`,
-});
+const {
+    AWSAccessKeyId,AWSSecretKey,Bucket
+} = require('../utils/constants');
 // console.log(process.env.Bucket);
 
 aws.config.update({
-    region: 'us-east-1',
-    accessKeyId: process.env.AWSAccessKeyId,
-    secretAccessKey: process.env.AWSSecretKey,
+    region: 'us-east-2',
+    accessKeyId: AWSAccessKeyId,
+    secretAccessKey: AWSSecretKey,
 });
 
-const S3_BUCKET = process.env.Bucket;
+const S3_BUCKET = Bucket;
 
 const sign_s3 = (req, res) => {
 

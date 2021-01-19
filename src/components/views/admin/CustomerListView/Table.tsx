@@ -19,7 +19,7 @@ import { AuthContext } from '../../../../context/auth-context';
 import { useHttpClient } from '../../../../hooks/http-hook';
 import SuccessModal from '../../../SuccessModal';
 import { ICustomer } from '../../../../types/appTypes';
-
+import { REACT_APP_API_BASE_URL } from '../../../../utils/constants';
 const useStyles = makeStyles((theme) => ({
     root: {},
     avatar: {
@@ -138,7 +138,7 @@ const CustomerTable: React.FC<IProps> = ({
         custs: ICustomer[],
     ) => {
         try {
-            const endpoint = process.env.REACT_APP_API_BASE_URL + 'user/update';
+            const endpoint = REACT_APP_API_BASE_URL + 'user/update';
 
             sendRequest(
                 endpoint,

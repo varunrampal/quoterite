@@ -108,11 +108,11 @@ const CreateQuote = () => {
             }
         } else {
             setDialogContent(
-                `Enter ${ITEMTYPE.toLowerCase()} name to search`,
+                `Enter ${ITEMTYPE.toLowerCase()} name to search`
             );
             setOpenDialog(true);
         }
-    };
+    }
 
     // handle click event of the Remove button
     const handleRemoveClick = (index) => {
@@ -159,15 +159,11 @@ const CreateQuote = () => {
                     orderType === OrderTransportType.Pickup &&
                     selectedPickupDate === null
                 ) {
-                    setDialogContent(`Please select the delivery date`);
+                    setDialogContent(`Please select the pickup date`);
                     setOpenDialog(true);
-                } else if (orderType === OrderTransportType.Pickup) {
-                    orderTransportType = OrderTransportType.Pickup;
-                } else if (
-                    (selectedPickupDate !== null ||
-                        selectedDeliveryDate !== null) &&
-                    OrderTransportType !== null
-                ) {
+                }
+                 else
+                 {
                     const transportDate =
                         orderTransportType === OrderTransportType.Delivery
                             ? selectedDeliveryDate
@@ -312,6 +308,7 @@ const CreateQuote = () => {
                                                 lineColor: 'grey',
                                                 placeholderColor: 'grey',
                                             }}
+                                        
                                         />
                                     </Grid>
                                     <Grid xs={2}>
@@ -321,7 +318,11 @@ const CreateQuote = () => {
                                             size="medium"
                                             variant="contained"
                                             onClick={handleAddClick}
-                                            style={{ height: 44 }}
+                                            style={{ 
+                                                height: '44px',
+                                                marginLeft: '5px'
+                                                
+                                            }}
                                         >
                                             Add
                                         </Button>

@@ -14,12 +14,12 @@ import {
 } from '@material-ui/core';
 import ShoppingCart from '@material-ui/icons/AddShoppingCartRounded';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     height: '100%'
   },
   avatar: {
-    backgroundColor: colors.orange[600],
+    backgroundColor:theme.palette.primary.main,
     height: 56,
     width: 56
   }
@@ -66,12 +66,12 @@ const PendingTransactions: React.FC<IProps> = ({ className, ...rest }) => {
             </Avatar>
           </Grid>
         </Grid>
-        <Box mt={3}>
+        {/* <Box mt={3}>
           <LinearProgress
             value={75.5}
             variant="determinate"
           />
-        </Box>
+        </Box> */}
       </CardContent>
     </Card>
   );

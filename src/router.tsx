@@ -54,7 +54,7 @@ const Router = () => {
                         component={DashboardView}
                     />
                     <AdminLayoutRoute
-                        path="/customer/list"
+                        path="/admin/customerslist"
                         component={CustomerListView}
                     />
                     <AdminLayoutRoute path="*" component={NotFoundView} />

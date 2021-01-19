@@ -13,8 +13,8 @@ const useStyles = makeStyles((theme: Theme) =>
             padding: theme.spacing(1, 1),
         },
         heading: {
-            fontSize: theme.typography.pxToRem(15),
-            fontWeight: theme.typography.fontWeightRegular,
+            fontSize: theme.typography.pxToRem(16),
+            fontWeight: theme.typography.fontWeightBold,
         },
     }),
 );

@@ -21,12 +21,12 @@ export const adminItems = [
       title: 'Dashboard'
     },
     {
-      href: '/customer/list',
+      href: '/admin/customerslist',
       icon: UsersIcon,
       title: 'Customers'
     },
     {
-      href: '/app/quotes',
+      href: '/admin/quotes',
       icon: ClipboardIcon,
       title: 'Quotes'
     },

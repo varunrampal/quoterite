@@ -15,13 +15,11 @@ import { useHttpClient } from '../../../../hooks/http-hook';
 import { AuthContext } from '../../../../context/auth-context';
 import LoadingSpinner from '../../../../ui/LoadingSpinner';
 import { AppState } from '../../../../stores/root-reducer';
-import {
-    loadCustomers,
-    
-} from '../../../../stores/customers/CustomersActions';
+import { loadCustomers } from '../../../../stores/customers/CustomersActions';
 import { CustomerState } from '../../../../types/appTypes';
 import Heading from '../../../Header';
-import {REACT_APP_API_BASE_URL} from '../../../../utils/constants';
+import { REACT_APP_API_BASE_URL } from '../../../../utils/constants';
+import AppBreadCrumb from '../../../AppBreadCrumb';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -67,8 +65,8 @@ const CustomerListView = () => {
     } = useHttpClient();
 
     useEffect(() => {
-       if (!filterRecords) {
-           console.log('hello');
+        if (!filterRecords) {
+            console.log('hello');
             getCustomerCount();
         } else {
             filterCustomers(searchStr);
@@ -79,8 +77,8 @@ const CustomerListView = () => {
         try {
             // const endpoint =
             //     process.env.REACT_APP_API_BASE_URL + 'user/total/0';
-          
-                const endpoint =  `${REACT_APP_API_BASE_URL}/user/total/0`;
+
+            const endpoint = `${REACT_APP_API_BASE_URL}/user/total/0`;
 
             const responseData = await sendRequest(endpoint, 'GET', null, {
                 Authorization: 'Bearer ' + auth.token,
@@ -98,13 +96,11 @@ const CustomerListView = () => {
 
     const getCustomers = async (reset: boolean) => {
         try {
-          
-           // const endpoint = process.env.REACT_APP_API_BASE_URL + 'user/';
-           const endpoint = `${REACT_APP_API_BASE_URL}/user/`;
+            // const endpoint = process.env.REACT_APP_API_BASE_URL + 'user/';
+            const endpoint = `${REACT_APP_API_BASE_URL}/user/`;
             let currentPage = page;
 
             if (reset) {
-
                 currentPage = 0;
             }
 
@@ -147,32 +143,29 @@ const CustomerListView = () => {
         setLimit(newLimit);
     };
     const filterCustomers = async (value: string) => {
-
-        if(value.trim() === '') {
-           getCustomerCount();
-        }else {
-           
+        if (value.trim() === '') {
+            getCustomerCount();
+        } else {
             const userRole = 0;
             let currentPage = page;
-    
-            if ((filterRecords && searchStr !== value)  || searchStr === '') {
+
+            if ((filterRecords && searchStr !== value) || searchStr === '') {
                 currentPage = 0;
             }
-    
+
             // const endpoint =
             //     process.env.REACT_APP_API_BASE_URL +
             //     `user/filter/${userRole}&${
             //         currentPage + 1
             //     }&${recordsPerPage}&${value}`;
 
-            const endpoint =
-            `${REACT_APP_API_BASE_URL}/user/filter/${userRole}&${
-                    currentPage + 1
-                }&${recordsPerPage}&${value}`;
+            const endpoint = `${REACT_APP_API_BASE_URL}/user/filter/${userRole}&${
+                currentPage + 1
+            }&${recordsPerPage}&${value}`;
             const responseData = await sendRequest(endpoint, 'GET', null, {
                 Authorization: 'Bearer ' + auth.token,
             });
-    
+
             const custState: CustomerState = {
                 customers: responseData.results.users,
                 currentPage,
@@ -181,15 +174,18 @@ const CustomerListView = () => {
                 searchStr: value,
             };
             dispatch(loadCustomers(custState));
-
         }
     };
     return (
         <Page className={classes.root} title="Customers">
             {isLoading && <LoadingSpinner asOverlay />}
-             
+
             <Container maxWidth={false}>
-                  <Heading heading="Customers"></Heading>
+                <Box m={1} p={2}>
+                    <Heading heading="Customers"></Heading>
+                    <AppBreadCrumb></AppBreadCrumb>
+                </Box>
+                
                 <Toolbar filterCustomers={filterCustomers} />
 
                 {customers.length > 0 ? (

@@ -15,9 +15,9 @@ interface IButtonProps extends ButtonProps {
 }
 
 const styles = (theme: Theme) => ({
-    button: {
-        margin: theme.spacing(1),
-    },
+    // button: {
+    //     margin: theme.spacing(1),
+    // },
     success: {
         color: '#FFFFFF',
         backgroundColor: green[500],
