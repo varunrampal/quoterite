@@ -1,17 +1,17 @@
 var aws = require('aws-sdk');
 const winston = require('winston');
-const {
-    AWSAccessKeyId,AWSSecretKey,Bucket
-} = require('../utils/constants');
+// const {
+//     AWSAccessKeyId,AWSSecretKey,Bucket
+// } = require('../utils/constants');
 // console.log(process.env.Bucket);
 
 aws.config.update({
     region: 'us-east-2',
-    accessKeyId: AWSAccessKeyId,
-    secretAccessKey: AWSSecretKey,
+    accessKeyId: process.env.AWSAccessKeyId,
+    secretAccessKey: process.env.AWSSecretKey,
 });
 
-const S3_BUCKET = Bucket;
+const S3_BUCKET = '';//Bucket;
 
 const sign_s3 = (req, res) => {
 
