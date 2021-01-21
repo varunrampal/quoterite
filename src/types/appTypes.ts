@@ -68,5 +68,7 @@ export interface IQuote {
     status: QuoteStatus;
     transportType: OrderTransportType;
     transportDate: String;
+    customerName?: string,
+    customerEmail?:string,
+    customerPhone?: string
 }
-

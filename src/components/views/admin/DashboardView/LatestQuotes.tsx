@@ -55,6 +55,12 @@ const LatestQuotes:React.FC<IProps> = ({ className,quotes,...rest }) => {
                 <TableCell>
                   Customer
                 </TableCell>
+                <TableCell>
+                  Email
+                </TableCell>
+                <TableCell>
+                  Phone
+                </TableCell>
                 <TableCell sortDirection="desc">
                   <Tooltip
                     enterDelay={300}
@@ -83,15 +89,21 @@ const LatestQuotes:React.FC<IProps> = ({ className,quotes,...rest }) => {
                     {quote.id}
                   </TableCell>
                   <TableCell>
-                    {quote.customer.name}
+                    {quote.customerName}
                   </TableCell>
                   <TableCell>
-                    {moment(order.createdAt).format('DD/MM/YYYY')}
+                    {quote.customerEmail}
+                  </TableCell>
+                  <TableCell>
+                    {quote.customerPhone}
+                  </TableCell>
+                  <TableCell>
+                   {quote.createDate}
                   </TableCell>
                   <TableCell>
                     <Chip
                       color="primary"
-                      label={order.status}
+                      label={quote.status}
                       size="small"
                     />
                   </TableCell>
