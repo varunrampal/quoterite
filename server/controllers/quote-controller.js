@@ -52,7 +52,7 @@ const createQuote = async (req, res, next) => {
             } else {
 
                 const receipentEmail = receiver_email !== '' ? receiver_email: user.email;
-                sendEmail(receipentEmail, user, createdQuote);
+                //sendEmail(receipentEmail, user, createdQuote);
              
                 return res.status(201).json(
                     success(
