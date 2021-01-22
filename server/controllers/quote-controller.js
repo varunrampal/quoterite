@@ -52,7 +52,7 @@ const createQuote = async (req, res, next) => {
             } else {
 
                 const receipentEmail = receiver_email !== '' ? receiver_email: user.email;
-                sendEmail(receipentEmail, user, createdQuote);
+               // sendEmail(receipentEmail, user, createdQuote);
              
                 return res.status(201).json(
                     success(
@@ -69,40 +69,40 @@ const createQuote = async (req, res, next) => {
 };
 
 //create send email job by passing job to createEmailJob method
-const sendEmail = (emailId, userObj, createdQuote) => {
-    //email data
-    let quoteList = '';
+// const sendEmail = (emailId, userObj, createdQuote) => {
+//     //email data
+//     let quoteList = '';
 
-  createdQuote.items.forEach((item,i) => {
-    quoteList = `${quoteList}<div>${i+1})${item.name}: ${item.quantity}</div>`; 
-  });
-    const job = {
-        title: 'Send-quote-request-notification' + emailId,
-        msg: {
-            to: emailId,
-            from: sender_email,
-            subject: `New quote request - ${createdQuote.id}`,
-            text: 'New quote request is submitted by the user',
-            html: `<strong>A new quote ${createdQuote.id} is submitted</strong><br><br>
-            <strong>Customer</strong>: 
-            Name: ${userObj.name}<br>
-            Email: ${userObj.email}<br>
-            Phone: ${userObj.phone} <br><br>
-            <strong>Quote details</strong><br>
-            ${quoteList}<br><br>
-            <strong>Mode</strong>: ${createdQuote.transportType}<br>
-            <strong>Date</strong>: ${createdQuote.transportDate}`
-        },
-    };
+//   createdQuote.items.forEach((item,i) => {
+//     quoteList = `${quoteList}<div>${i+1})${item.name}: ${item.quantity}</div>`; 
+//   });
+//     const job = {
+//         title: 'Send-quote-request-notification' + emailId,
+//         msg: {
+//             to: emailId,
+//             from: sender_email,
+//             subject: `New quote request - ${createdQuote.id}`,
+//             text: 'New quote request is submitted by the user',
+//             html: `<strong>A new quote ${createdQuote.id} is submitted</strong><br><br>
+//             <strong>Customer</strong>: 
+//             Name: ${userObj.name}<br>
+//             Email: ${userObj.email}<br>
+//             Phone: ${userObj.phone} <br><br>
+//             <strong>Quote details</strong><br>
+//             ${quoteList}<br><br>
+//             <strong>Mode</strong>: ${createdQuote.transportType}<br>
+//             <strong>Date</strong>: ${createdQuote.transportDate}`
+//         },
+//     };
 
-    //create job by calling createEmailJob method
-    emailJob
-        .createEmailJob(job)
-        .then(() => {
-            //done();
-        })
-        .catch((error) => console.log(error)); //done(error));
-};
+//     //create job by calling createEmailJob method
+//     emailJob
+//         .createEmailJob(job)
+//         .then(() => {
+//             //done();
+//         })
+//         .catch((error) => console.log(error)); //done(error));
+// };
 
 // @route GET quote/:id
 // @desc get quote details
