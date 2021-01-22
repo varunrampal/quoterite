@@ -168,7 +168,7 @@ queue.process('Export receipts', (job, DoneCallback) => {
                                         );
                                     } else {
                                         //Export receipts file after uploading it on S3
-                                        exportReceipts(email, s3ResponseUrl, DoneCallback);
+                                       // exportReceipts(email, s3ResponseUrl, DoneCallback);
                                     }
                                 });
                             })
