@@ -1,8 +1,24 @@
-const { success, error } = require('../helpers/api-response');
-const { User } = require('../models/user');
-const { Quote } = require('../models/quote');
+const {
+    success,
+    error
+} = require('../helpers/api-response');
+const {
+    User
+} = require('../models/user');
+const {
+    Quote
+} = require('../models/quote');
 const emailJob = require('../jobs/send-email-job');
-const {receiver_email, sender_email} = require('../utils/constants');
+const {
+    receiver_email,
+    sender_email
+} = require('../utils/constants');
+const sgMail = require('@sendgrid/mail');
+const winston = require('winston');
+const {
+    SENDGRID_API_KEY,
+} = require('../utils/constants');
+
 // @route POST /quote
 // @desc to create quote, returns quote id
 // @access Private
@@ -51,13 +67,12 @@ const createQuote = async (req, res, next) => {
                     );
             } else {
 
-                const receipentEmail = receiver_email !== '' ? receiver_email: user.email;
-               // sendEmail(receipentEmail, user, createdQuote);
-             
+                const receipentEmail = receiver_email !== '' ? receiver_email : user.email;
+                sendEmail(receipentEmail, user, createdQuote);
+
                 return res.status(201).json(
                     success(
-                        'Quote created successfully.',
-                        {
+                        'Quote created successfully.', {
                             quoteId: createdQuote.id,
                         },
                         res.statusCode,
@@ -69,40 +84,58 @@ const createQuote = async (req, res, next) => {
 };
 
 //create send email job by passing job to createEmailJob method
-// const sendEmail = (emailId, userObj, createdQuote) => {
-//     //email data
-//     let quoteList = '';
+const sendEmail = (emailId, userObj, createdQuote) => {
+    //email data
+    let quoteList = '';
 
-//   createdQuote.items.forEach((item,i) => {
-//     quoteList = `${quoteList}<div>${i+1})${item.name}: ${item.quantity}</div>`; 
-//   });
-//     const job = {
-//         title: 'Send-quote-request-notification' + emailId,
-//         msg: {
-//             to: emailId,
-//             from: sender_email,
-//             subject: `New quote request - ${createdQuote.id}`,
-//             text: 'New quote request is submitted by the user',
-//             html: `<strong>A new quote ${createdQuote.id} is submitted</strong><br><br>
-//             <strong>Customer</strong>: 
-//             Name: ${userObj.name}<br>
-//             Email: ${userObj.email}<br>
-//             Phone: ${userObj.phone} <br><br>
-//             <strong>Quote details</strong><br>
-//             ${quoteList}<br><br>
-//             <strong>Mode</strong>: ${createdQuote.transportType}<br>
-//             <strong>Date</strong>: ${createdQuote.transportDate}`
-//         },
-//     };
+    createdQuote.items.forEach((item, i) => {
+        quoteList = `${quoteList}<div>${i+1})${item.name}: ${item.quantity}</div>`;
+    });
+    const job = {
+        title: 'Send-quote-request-notification' + emailId,
+        msg: {
+            to: emailId,
+            from: sender_email,
+            subject: `New quote request - ${createdQuote.id}`,
+            text: 'New quote request is submitted by the user',
+            html: `<strong>A new quote ${createdQuote.id} is submitted</strong><br><br>
+            <strong>Customer</strong>: 
+            Name: ${userObj.name}<br>
+            Email: ${userObj.email}<br>
+            Phone: ${userObj.phone} <br><br>
+            <strong>Quote details</strong><br>
+            ${quoteList}<br><br>
+            <strong>Mode</strong>: ${createdQuote.transportType}<br>
+            <strong>Date</strong>: ${createdQuote.transportDate}`
+        },
+    };
 
-//     //create job by calling createEmailJob method
-//     emailJob
-//         .createEmailJob(job)
-//         .then(() => {
-//             //done();
-//         })
-//         .catch((error) => console.log(error)); //done(error));
-// };
+    try {
+
+        //setup API key
+        sgMail.setApiKey(SENDGRID_API_KEY);
+
+        //Send mail
+        sgMail.send(job.msg).then((result) => {
+
+            //email sent
+            winston.info(`Email sent, User: ${job.msg.to}, date: ${new Date()}`);
+           // DoneCallback();
+            //return result;
+        }).catch((error) => console.log(error));
+
+    } catch (ex) {
+        winston.info(`Error in sending email, User: ${job.msg.to}, date: ${new Date()}, error: ${ex}`);
+    }
+
+    //create job by calling createEmailJob method
+    // emailJob
+    //     .createEmailJob(job)
+    //     .then(() => {
+    //         //done();
+    //     })
+    //     .catch((error) => console.log(error)); //done(error));
+};
 
 // @route GET quote/:id
 // @desc get quote details
@@ -110,19 +143,20 @@ const createQuote = async (req, res, next) => {
 
 const getPendingQuotes = async (req, res, next) => {
 
-    const pendingQuotes = await Quote.find({status: 'OPEN'}).count();
+    const pendingQuotes = await Quote.find({
+        status: 'OPEN'
+    }).count();
     return res.status(200).json(
-            success(
-                'Pending quotes.',
-                {
-                    pendingQuotes,
-                },
-                res.statusCode
-            )
-        );
-    }
+        success(
+            'Pending quotes.', {
+                pendingQuotes,
+            },
+            res.statusCode
+        )
+    );
+}
 
-    // @route GET quote/:id
+// @route GET quote/:id
 // @desc get quote details
 // @access Private
 

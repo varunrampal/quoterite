@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Box, Container, Grid, makeStyles } from '@material-ui/core';
 import Page from '../../../page';
-import Widget from './Widget';
+import Widget from '../../../Widget';
 import { REACT_APP_API_BASE_URL } from '../../../../utils/constants';
 import { AuthContext } from '../../../../context/auth-context';
 import { useHttpClient } from '../../../../hooks/http-hook';
