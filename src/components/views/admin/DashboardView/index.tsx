@@ -7,9 +7,10 @@ import { AuthContext } from '../../../../context/auth-context';
 import { useHttpClient } from '../../../../hooks/http-hook';
 import Heading from '../../../Header';
 import AppBreadCrumb from '../../../AppBreadCrumb';
-import moment from 'moment';
 import Sales from './sales';
 import OrderDeliveryMode from './OrderDeliveryMode';
+import LatestQuotes from './LatestQuotes';
+import { IQuote } from '../../../../types/appTypes';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -35,6 +36,7 @@ const Dashboard = () => {
     const { isLoading, sendRequest } = useHttpClient();
     const [pendingQuotes, setPendingQuotes] = useState<number>(0);
     const [totalCustomers, settotalCustomers] = useState<number>(0);
+    const [latestQuotes, setLatestQuotes] = useState<IQuote[]>([]);
     // const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 
     //Load widget data
@@ -49,6 +51,7 @@ const Dashboard = () => {
             if (responseData.code === 200) {
                 setPendingQuotes(responseData.results.pendingQuotes);
                 settotalCustomers(responseData.results.totalCustomers);
+                setLatestQuotes(responseData.results.latestQuotes)
             }
         } catch (error) {
             console.log(error);
@@ -95,6 +98,10 @@ const Dashboard = () => {
                     <Grid item lg={4} md={6} xl={3} xs={12}>
                         <OrderDeliveryMode />
                     </Grid>
+                    <Grid item lg={12} md={12} xl={12} xs={12}>
+                        <LatestQuotes quotes= {latestQuotes} />
+                    </Grid>
+                
                     {/* <Grid
             item
             lg={3}
