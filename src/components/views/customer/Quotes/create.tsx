@@ -84,6 +84,7 @@ const CreateQuote = () => {
     let selectedItem: IItem = { id: 0, name: '', quantity: 0 };
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+     
         setOrderType((event.target as HTMLInputElement).value);
     };
     const { selectedProperty } = useSelector(
@@ -146,9 +147,9 @@ const CreateQuote = () => {
                 setDialogContent(`Quantity should be greater than 0.`);
                 setOpenDialog(true);
             } else {
-                let orderTransportType: OrderTransportType =
-                    OrderTransportType.Delivery;
-
+                // let orderTransportType: OrderTransportType =
+                //     OrderTransportType.Delivery;
+                  
                 if (
                     orderType === OrderTransportType.Delivery &&
                     selectedDeliveryDate === null
@@ -165,18 +166,18 @@ const CreateQuote = () => {
                  else
                  {
                     const transportDate =
-                        orderTransportType === OrderTransportType.Delivery
+                        orderType === OrderTransportType.Delivery
                             ? selectedDeliveryDate
                             : selectedPickupDate;
 
-                    let quoteDetails: IQuote = {
+                        let quoteDetails: IQuote = {
                         createDate: moment().format('YYYY/MM/DD'),
                         items: inputList,
                         notes: notes,
                         property: propertyObj._id,
                         status: QuoteStatus.Open,
                         submitedBy: auth.userId,
-                        transportType: orderTransportType,
+                        transportType: orderType,
                         transportDate: moment(transportDate).format(
                             'YYYY/MM/DD HH:mm',
                         ),

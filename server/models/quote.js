@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 const autoIncrement = require('mongoose-plugin-autoinc');
 
 var quoteSchema = new mongoose.Schema({
@@ -8,7 +9,7 @@ var quoteSchema = new mongoose.Schema({
     required: false
    },
     submitedBy: {
-        type: String,
+        type: Schema.Types.ObjectId, ref: 'User',
         required:true
     },
     property:{
@@ -54,6 +55,11 @@ var quoteSchema = new mongoose.Schema({
    transportDate: {
     type: String,
     required: true
+   },
+   user: {
+     type: [],
+     required: false
+
    }
 
 });
