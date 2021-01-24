@@ -70,7 +70,7 @@ const Dashboard = () => {
                 <Grid container spacing={3}>
                     <Grid item lg={3} sm={6} xl={3} xs={12}>
                         <Widget
-                            type="quote"
+                            type="pendingquote"
                             heading="PENDING QUOTES"
                             content={pendingQuotes}
                         />

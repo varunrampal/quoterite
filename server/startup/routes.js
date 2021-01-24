@@ -16,6 +16,7 @@ const propertyRoutes = require('../routes/property-routes');
 const itemRoutes = require('../routes/item-routes');
 const quoteRoutes = require('../routes/quote-routes');
 const adminDashboardRoutes = require('../routes/admin-dashboard-routes');
+const customerDashboardRoutes = require('../routes/customer-dashboard-routes');
 
 module.exports = function (app) {
    app.use(bodyParser.json({limit: '50mb'}));
@@ -38,6 +39,7 @@ module.exports = function (app) {
     app.use('/api/item', itemRoutes);
     app.use('/api/quote', quoteRoutes);
     app.use('/api/admin', adminDashboardRoutes);
+    app.use('/api/customer', customerDashboardRoutes);
 
     
     // app.use('/kue-api/', kue.app);
