@@ -38,7 +38,8 @@ const Dashboard = () => {
     //Load widget data
     const getWidgetsData = async () => {
       try {
-          const endpoint = `${REACT_APP_API_BASE_URL}/admin/dashboard/widget`;
+       
+          const endpoint = `${REACT_APP_API_BASE_URL}/customer/dashboard/widget/${auth.userId}`;
 
           const responseData = await sendRequest(endpoint, 'GET', null, {
               Authorization: 'Bearer ' + auth.token,
@@ -83,7 +84,7 @@ const Dashboard = () => {
                     <Widget
                             type="pendingorders"
                             heading="PENDING ORDERS"
-                            content={5}
+                            content={2}
                         />
                     </Grid>
                     <Grid item lg={3} sm={6} xl={3} xs={12}>
@@ -93,13 +94,8 @@ const Dashboard = () => {
                             content={5}
                         />
                     </Grid>
-                    <Grid item lg={3} sm={6} xl={3} xs={12}>
-                    <Widget
-                            type="order"
-                            heading="PENDING PAYMENTS"
-                            content={5}
-                        />
-                    </Grid>
+                    
+                    
                     <Grid item lg={12} md={12} xl={12} xs={12}>
                         <LatestQuotes quotes= {latestQuotes} />
                     </Grid>

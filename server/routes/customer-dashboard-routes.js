@@ -7,7 +7,7 @@ const customerDashboardController = require('../controllers/customer-dashboard-c
 router.use(checkAuth);
 
 router.get(
-    '/dashboard/widget',
+    '/dashboard/widget/:userid',
     customerDashboardController.getWidgetsData
 );
 

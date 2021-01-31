@@ -13,20 +13,18 @@ const {
 
 const getWidgetsData = async (req, res, next) => {
     try {
-        const userId = req.userData.userId;
-        console.log(userId);
-        const id = mongoose.Types.ObjectId(userId);
-      
+          
         const pendingQuotes = await Quote.find({
-            status: 'OPEN'
-        },{_id: id }).count();
+            _id:  req.params.userid },
+            {status: 'OPEN'
+        }).count();
 
         const repliedQuotes = await Quote.find({
             status: 'REPLIED'
-        },{_id: id }).count();
+        },{_id:  req.params.userid }).count();
 
         const latestQuotes = await Quote.find({
-            _id: id
+            submitedBy:  req.params.userid
         }).sort({id: -1}).limit(10);
             
          

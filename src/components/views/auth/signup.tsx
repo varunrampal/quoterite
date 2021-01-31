@@ -130,7 +130,8 @@ const SignUp: React.FunctionComponent = () => {
                     name: values.name,
                     email: values.email,
                     password: values.password,
-                    phone: values.phone
+                    phone: values.phone,
+                    type: 'LOCAL'
                 }),
                 {
                     'Content-Type': 'application/json',

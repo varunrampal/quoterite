@@ -5,76 +5,119 @@ const jwt = require('jsonwebtoken');
 //const queue = kue.createQueue();
 //const winston = require('winston');
 
-const { success, error } = require('../helpers/api-response');
-const { User } = require('../models/user');
+const {
+    success,
+    error
+} = require('../helpers/api-response');
+const {
+    User
+} = require('../models/user');
 
 //const { Receipt } = require('../models/receipt');
 //const HttpError = require('../helpers/http-error');
 //const job = require('../jobs/export-receipts-job');
 //const { appEnums } = require('../helpers/app-enums');
-const { JWT_KEY } = require('../utils/constants');
+const {
+    JWT_KEY
+} = require('../utils/constants');
 
 // @route POST /user/signup
 // @desc to register user, returns userid, email and token
 // @access Public
 const signup = async (req, res, next) => {
-    const { name, email, password, phone } = req.body;
-   
+    const {
+        name,
+        email,
+        password,
+        phone,
+        type
+    } = req.body;
+
+    let socialUserExists = false;
+
     //throw new Error('Could not sign up the user');
     const hasUser = await User.findOne({
         email: email,
+        role: 0
     });
 
     // if user with the provided email already exists
-    if (hasUser) {
+    if (hasUser && type === 'LOCAL') {
         return res
             .status(422)
             .json(error('User already exists.', res.statusCode));
+    } else if (hasUser && type === 'GOOGLE') {
+        socialUserExists = true;
     }
 
-    // hash the password
-    let hashedPassword;
-    hashedPassword = await bcrypt.hash(password, 12);
+    if (!socialUserExists || type === 'LOCAL') {
+        // hash the password
+        let hashedPassword;
+        hashedPassword = await bcrypt.hash(password, 12);
 
-    // user object to save in the db
-    let createdUser = new User({
-        name,
-        email,
-        phone,
-        password: hashedPassword,
-        role: 0,
-        active: true,
-    });
+        // user object to save in the db
+        let createdUser = new User({
+            name,
+            email,
+            phone,
+            password: hashedPassword,
+            role: 0,
+            active: true,
+            type
+        });
 
-    // save user in the db
-    await createdUser.save();
+        // save user in the db
+        await createdUser.save();
 
-    // generate token
-    let token;
-    token = jwt.sign(
-        {
-            usrId: createdUser.id,
-            email: createdUser.email,
-        },
-        //process.env.JWT_KEY,
-        JWT_KEY,
-        {
-            expiresIn: '1h',
-        },
-    );
-    return res.status(201).json(
-        success(
-            'You are signed up successfully.',
-            {
-                userId: createdUser.id,
-                userName: createdUser.name,
-                userRole: createdUser.role,
-                userEmail: createdUser.email,
-                token: token,
+        // generate token
+        let token;
+        token = jwt.sign({
+                usrId: createdUser.id,
+                email: createdUser.email,
             },
-            res.statusCode,
-        ),
-    );
+            //process.env.JWT_KEY,
+            JWT_KEY, {
+                expiresIn: '1h',
+            },
+        );
+        return res.status(201).json(
+            success(
+                'You are signed up successfully.', {
+                    userId: createdUser.id,
+                    userName: createdUser.name,
+                    userRole: createdUser.role,
+                    userEmail: createdUser.email,
+                    token: token,
+                },
+                res.statusCode,
+            ),
+        );
+    } else if(socialUserExists) {
+           // generate token
+        let token;
+        token = jwt.sign({
+                usrId: hasUser.id,
+                email: hasUser.email,
+            },
+            //process.env.JWT_KEY,
+            JWT_KEY, {
+                expiresIn: '1h',
+            },
+        );
+        return res.status(201).json(
+            success(
+                'You are signed up successfully.', {
+                    userId: hasUser.id,
+                    userName: hasUser.name,
+                    userRole: hasUser.role,
+                    userEmail: hasUser.email,
+                    token: token,
+                },
+                res.statusCode,
+            ),
+        );
+    }
+
 };
 
 // @route POST /user/login
@@ -82,7 +125,10 @@ const signup = async (req, res, next) => {
 // @access Public
 const login = async (req, res, next) => {
 
-       const { email, password } = req.body;
+    const {
+        email,
+        password
+    } = req.body;
 
     // check if user with the provided email-id exists
     let existingUser;
@@ -114,22 +160,19 @@ const login = async (req, res, next) => {
     // generate token
     let token;
 
-    token = jwt.sign(
-        {
+    token = jwt.sign({
             userId: existingUser.id,
             email: existingUser.email,
         },
         //process.env.JWT_KEY,
-        JWT_KEY,
-        {
+        JWT_KEY, {
             expiresIn: '1h',
         },
     );
 
     res.status(200).json(
         success(
-            'You are logged in successfully.',
-            {
+            'You are logged in successfully.', {
                 userId: existingUser.id,
                 userName: existingUser.name,
                 userRole: existingUser.role,
@@ -379,8 +422,7 @@ const getTotalUsers = async (req, res, next) => {
     }).count();
     res.status(200).json(
         success(
-            'Users count',
-            {
+            'Users count', {
                 userCount,
             },
             res.statusCode,
@@ -398,18 +440,15 @@ const getAllUsers = async (req, res, next) => {
     //PageNumber From which Page to Start
     const pageNumber = req.body.page ? parseInt(req.body.page) : 1;
 
-    const users = await User.find(
-        {
+    const users = await User.find({
             role: req.body.role,
-        },
-        {
+        }, {
             name: 1,
             email: 1,
             phone: 1,
             _id: 1,
             active: 1,
-        },
-    )
+        }, )
         .sort({
             name: 1,
         })
@@ -418,8 +457,7 @@ const getAllUsers = async (req, res, next) => {
 
     res.status(200).json(
         success(
-            'Users list',
-            {
+            'Users list', {
                 users,
             },
             res.statusCode,
@@ -431,15 +469,17 @@ const getAllUsers = async (req, res, next) => {
 // @desc filter users by email or email.
 // @access Private
 const FilterUsersByNameOrEmail = async (req, res, next) => {
-    const pagination = req.params.pagination
-        ? parseInt(req.params.pagination)
-        : 10;
+    const pagination = req.params.pagination ?
+        parseInt(req.params.pagination) :
+        10;
     const pageNumber = req.params.page ? parseInt(req.params.page) : 1;
-    const { role, value } = req.params;
+    const {
+        role,
+        value
+    } = req.params;
 
     const userCount = await User.find({
-        $or: [
-            {
+        $or: [{
                 name: {
                     $regex: value + '.*',
                     $options: 'i',
@@ -455,10 +495,8 @@ const FilterUsersByNameOrEmail = async (req, res, next) => {
         role: role,
     }).count();
 
-    const users = await User.find(
-        {
-            $or: [
-                {
+    const users = await User.find({
+            $or: [{
                     name: {
                         $regex: value + '.*',
                         $options: 'i',
@@ -472,14 +510,12 @@ const FilterUsersByNameOrEmail = async (req, res, next) => {
                 },
             ],
             role: role,
-        },
-        {
+        }, {
             name: 1,
             email: 1,
             _id: 1,
             active: 1,
-        },
-    )
+        }, )
         .sort({
             name: 1,
         })
@@ -488,8 +524,7 @@ const FilterUsersByNameOrEmail = async (req, res, next) => {
 
     res.status(200).json(
         success(
-            'Filtered users list',
-            {
+            'Filtered users list', {
                 users,
                 totalRecords: userCount,
             },
@@ -498,7 +533,7 @@ const FilterUsersByNameOrEmail = async (req, res, next) => {
     );
 };
 
-const updateUser = async(req, res, next) => {
+const updateUser = async (req, res, next) => {
 
     const user = await User.findById(req.body.id);
 
@@ -506,49 +541,53 @@ const updateUser = async(req, res, next) => {
         res.status(400).json(error("Invalid user details.", res.statusCode));
     } else {
 
-      //update user
-      const newUser = await User.findOneAndUpdate(
-        { _id: req.body.id },
-          req.body,
-        { new: true }
-    );
-
-    await newUser.save();
-
-    res.status(200).json(
-        success(
-            'user updated',
-            {
-                isUpdated: 1,
+        //update user
+        const newUser = await User.findOneAndUpdate({
+                _id: req.body.id
             },
-            res.statusCode
-        )
-    );
- }
+            req.body, {
+                new: true
+            }
+        );
+
+        await newUser.save();
+
+        res.status(200).json(
+            success(
+                'user updated', {
+                    isUpdated: 1,
+                },
+                res.statusCode
+            )
+        );
+    }
 
 }
 
-const updateUsers = async(req, res) => {
+const updateUsers = async (req, res) => {
 
     const criteria = {
-        _id:{ $in: req.body.custIds.split(',')}
-       };
+        _id: {
+            $in: req.body.custIds.split(',')
+        }
+    };
 
-     await User.update(criteria,  req.body, { multi: true }, function(err, res) {
+    await User.update(criteria, req.body, {
+        multi: true
+    }, function (err, res) {
         if (err) {
             res.status(400).json(error("error occurred.", res.statusCode));
         } else {
             res.status(200).json(
                 success(
-                    'users updated',
-                    {
+                    'users updated', {
                         isUpdated: 1,
                     },
                     res.statusCode
                 )
             );
         }
-     });
+    });
 }
 
 module.exports = {
