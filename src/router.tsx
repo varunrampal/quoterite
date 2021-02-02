@@ -12,7 +12,10 @@ import CreateQuoteView from './components/views/customer/Quotes/create';
 import AdminLayoutRoute from './layouts/AdminLayout';
 import NotFoundView from './components/views/errors/NotFoundView';
 import ThemeProvider from './theme/ThemeProvider';
+import QuoteListView from './components/views/admin/Quote/QuoteListView';
 import CustomerListView from './components/views/admin/CustomerListView';
+import QuoteDetailsView from './components/views/admin/Quote/QuoteDetailsView';
+
 
 
 const Router = () => {
@@ -57,6 +60,15 @@ const Router = () => {
                         path="/admin/customerslist"
                         component={CustomerListView}
                     />
+                     <AdminLayoutRoute
+                        path="/admin/quoteslist"
+                        component={QuoteListView}
+                    />
+                     <AdminLayoutRoute
+                        path="/admin/quotedetails/:id"
+                        component={QuoteDetailsView}
+                    />
+                    
                     <AdminLayoutRoute path="*" component={NotFoundView} />
                 </Switch>
             </ThemeProvider>

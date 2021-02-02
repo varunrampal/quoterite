@@ -72,3 +72,11 @@ export interface IQuote {
     customerEmail?:string,
     customerPhone?: string
 }
+
+export type QuoteState = {
+    quotes: IQuote[];
+    currentPage: number;
+    totalRecords: number;
+    filterRecords: boolean;
+    searchStr: string;
+};

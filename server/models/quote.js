@@ -28,7 +28,12 @@ var quoteSchema = new mongoose.Schema({
           quantity:{
             type: Number,
             required: true,
+          },
+          stock: {
+            type: Number,
+            required: false
           }
+
    }],
    notes:{
        type: String,

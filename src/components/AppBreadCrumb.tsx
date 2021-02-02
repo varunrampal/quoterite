@@ -37,12 +37,12 @@ const AppBreadCrumb: React.FC<IProps> = (props) => {
     let pathnames = pathname.split('/').filter((x) => x);
 
     // if (auth.userRole === 1) {
-        pathnames.forEach((x: string) => {
-            if (x.includes('customer') || x.includes('admin')) results.push(x);
-        });
-        pathnames = pathnames.filter(
-            (x: string) => x !== 'customer' && x !== 'admin',
-        );
+    pathnames.forEach((x: string) => {
+        if (x.includes('customer') || x.includes('admin')) results.push(x);
+    });
+    pathnames = pathnames.filter(
+        (x: string) => x !== 'customer' && x !== 'admin',
+    );
     // }
 
     //console.log(pathnames);
@@ -85,13 +85,16 @@ const AppBreadCrumb: React.FC<IProps> = (props) => {
                     case 'customerslist':
                         displayName = 'Customers List';
                         break;
+                    case 'quoteslist':
+                        displayName = 'Quote List';
+                        break;
                 }
 
                 if (name !== 'dashboard') {
                     const routeTo = `/${results[0]}/${pathnames
                         .slice(0, index + 1)
                         .join('/')}`;
-                        //console.log(routeTo);
+                    //console.log(routeTo);
 
                     const isLast = index === pathnames.length - 1;
                     return isLast ? (
