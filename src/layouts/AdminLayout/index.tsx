@@ -56,6 +56,7 @@ const AdminLayout = ({children, ...rest}) => {
 }  
   
 const AdminLayoutRoute = ({component: Component, ...rest}) => {  
+  console.log({...rest})
   return (  
     <Route {...rest} render={matchProps => (  
       <AdminLayout>  

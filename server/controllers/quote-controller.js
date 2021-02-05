@@ -203,16 +203,31 @@ const getAllAdminQuotes = async (req, res, next) => {
                     foreignField: "_id",
                     as: "user"
                 },
+              
 
-            }, {
+            }, 
+            {
+                $unwind: "$user"
+            },
+            {
+                $lookup: {
+                    from: "properties",
+                    localField: "property",
+                    foreignField: "_id",
+                    as: "property"
+                }
+            },
+            {
+                $unwind: "$property"
+            },
+            {
                 $sort: {
                     'id': -1
                 }
             }]).skip((pageNumber - 1) * pagination)
             .limit(pagination);
-
+         
             let quoteDetails = [];
-
             Quotes.forEach((quote) => {
                  quoteDetails.push({
                  id: quote.id,
@@ -220,9 +235,10 @@ const getAllAdminQuotes = async (req, res, next) => {
                  status: quote.status,
                  transportType: quote.transportType,
                  transportDate: quote.transportDate,
-                 customerName: quote.user[0].name,
-                 customerEmail: quote.user[0].email,
-                 customerPhone: quote.user[0].phone
+                 customerName: quote.user.name,
+                 customerEmail: quote.user.email,
+                 customerPhone: quote.user.phone,
+                 property:quote.property
              });
             })
         res.status(200).json(
@@ -234,6 +250,7 @@ const getAllAdminQuotes = async (req, res, next) => {
             )
         );
     } catch (err) {
+      
         res
             .status(500)
             .json(
@@ -244,8 +261,6 @@ const getAllAdminQuotes = async (req, res, next) => {
             );
     }
 }
-
-
 
 // @route GET quote/admin/:id
 // @desc get quote details
@@ -315,6 +330,7 @@ const getAdminQuote = async (req, res, next) => {
                 transportType: quote.transportType,
                 transportDate: quote.transportDate
             });
+
             res.status(200).json(
                 success(
                     'Quote Details', {

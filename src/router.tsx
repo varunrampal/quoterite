@@ -16,8 +16,6 @@ import QuoteListView from './components/views/admin/Quote/QuoteListView';
 import CustomerListView from './components/views/admin/CustomerListView';
 import QuoteDetailsView from './components/views/admin/Quote/QuoteDetailsView';
 
-
-
 const Router = () => {
     let routes;
     const {
@@ -36,7 +34,9 @@ const Router = () => {
     //     return token ? <Component /> : <Redirect to="/" />;
     // };
 
+    
     if (!token) {
+      
         routes = (
             <Switch>
                 <Route path="/" exact>
@@ -49,12 +49,14 @@ const Router = () => {
             </Switch>
         );
     } else if (token && userRole === 1) {
+       
         routes = (
             <ThemeProvider>
                 <Switch>
                     <AdminLayoutRoute
                         path="/admin/dashboard"
                         component={DashboardView}
+                        exact
                     />
                     <AdminLayoutRoute
                         path="/admin/customerslist"
@@ -65,11 +67,11 @@ const Router = () => {
                         component={QuoteListView}
                     />
                      <AdminLayoutRoute
-                        path="/admin/quotedetails/:id"
+                        path="/admin/quotedetails"
                         component={QuoteDetailsView}
                     />
                     
-                    <AdminLayoutRoute path="*" component={NotFoundView} />
+                    <AdminLayoutRoute path="*" component={DashboardView} />
                 </Switch>
             </ThemeProvider>
         );

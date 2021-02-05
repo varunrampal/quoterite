@@ -47,9 +47,9 @@ const QuoteListView = () => {
     const [page, setPage] = useState<number>(0);
     const [limit, setLimit] = useState<number>(10);
     const auth = useContext(AuthContext);
-
     const dispatch = useDispatch();
-    const {
+
+     const {
         quotes,
         currentPage,
         totalRecords,
@@ -64,16 +64,16 @@ const QuoteListView = () => {
         clearSuccess,
     } = useHttpClient();
 
+
     useEffect(() => {
         if (!filterRecords) {
-            console.log('hello');
-            getCustomerCount();
+              getQuoteCount();
         } else {
             filterCustomers(searchStr);
         }
     }, [page]);
 
-    const getCustomerCount = async (reset: boolean = false) => {
+    const getQuoteCount = async (reset: boolean = false) => {
         try {
             // const endpoint =
             //     process.env.REACT_APP_API_BASE_URL + 'user/total/0';
@@ -144,7 +144,7 @@ const QuoteListView = () => {
     };
     const filterCustomers = async (value: string) => {
         if (value.trim() === '') {
-            getCustomerCount();
+            getQuoteCount();
         } else {
             const userRole = 0;
             let currentPage = page;
@@ -160,14 +160,14 @@ const QuoteListView = () => {
                 Authorization: 'Bearer ' + auth.token,
             });
 
-            const custState: QuoteState = {
+            const quoteState: QuoteState = {
                 quotes: responseData.results.Quotes,
                 currentPage,
                 totalRecords: responseData.results.totalRecords,
                 filterRecords: true,
                 searchStr: value,
             };
-            dispatch(loadQuotes(custState));
+            dispatch(loadQuotes(quoteState));
         }
     };
     return (
@@ -185,7 +185,7 @@ const QuoteListView = () => {
                 {quotes.length > 0 ? (
                     <Box mt={3}>
                         <QuoteTable
-                            quotes={quotes}
+                            quotesDetails={quotes}
                             totalRecords={totalRecords}
                             page={currentPage}
                             limit={limit}

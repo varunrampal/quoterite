@@ -88,6 +88,9 @@ const AppBreadCrumb: React.FC<IProps> = (props) => {
                     case 'quoteslist':
                         displayName = 'Quote List';
                         break;
+                    case 'quotedetails':
+                        displayName = 'Quote Details';
+                        break;
                 }
 
                 if (name !== 'dashboard') {

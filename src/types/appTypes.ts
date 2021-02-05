@@ -26,7 +26,7 @@ export interface ITiles {
 
 export interface IProperty {
     _id: string;
-    custmail: string;
+    custmail?: string;
     name: string;
     address: {
         street: String;
@@ -54,6 +54,7 @@ export interface IItem {
     id: number;
     name: string;
     quantity?: number;
+    stock?:number
 }
 
 //Quote
@@ -79,4 +80,39 @@ export type QuoteState = {
     totalRecords: number;
     filterRecords: boolean;
     searchStr: string;
+    selectedQuote?:any
 };
+
+export type QuoteDetails = {
+    id: number,
+      user: {
+        name:string
+        email:string,
+        phone:string
+      },
+      property: {
+        _id: string;
+        name: string,
+        email: string,
+        phone: string,
+        address: {
+            street: String;
+            city: String;
+            state: string;
+            postcode: String;
+            country: String;
+        };
+      },
+      items: [{
+        id: number,
+        name: String,
+        quantity: number,
+        stock: number
+     }],
+      notes: string,
+      type: string,
+      createDate: string,
+      status: string,
+      transportType: string,
+      transportDate: string
+}

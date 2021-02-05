@@ -1,9 +1,10 @@
 import { QuoteState } from '../../types/appTypes';
-import { searchQuote, loadQuotes } from './QuotesActions';
+import { searchQuote, loadQuotes, selectedQuote } from './QuotesActions';
 
 type Actions =
     | ReturnType<typeof searchQuote>
-    | ReturnType<typeof loadQuotes>;
+    | ReturnType<typeof loadQuotes>
+    | ReturnType<typeof selectedQuote>;
 
 
 const initialState: QuoteState = {
@@ -11,7 +12,8 @@ const initialState: QuoteState = {
   currentPage: 0,
   totalRecords: 0,
   filterRecords: false,
-  searchStr: ''
+  searchStr: '',
+  selectedQuote: {}
 }
 const reducer = (state: QuoteState = initialState, action: Actions) => {
     switch(action.type) {
@@ -36,6 +38,15 @@ const reducer = (state: QuoteState = initialState, action: Actions) => {
                 quotes: filteredQuotes,
               
             };
+            case 'SELECTED_QUOTE':
+                const filteredQuote = state.quotes.filter(
+                    (quote) => quote.id === action.payload,
+                )[0];
+    
+                return {
+                    ...state,
+                    selectedQuote: filteredQuote,
+                };
         default:
             return state;
     }

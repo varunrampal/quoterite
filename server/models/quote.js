@@ -13,7 +13,7 @@ var quoteSchema = new mongoose.Schema({
         required:true
     },
     property:{
-      type: String,
+      type: Schema.Types.ObjectId, ref: 'Property',
       required:false
     },
    items:[{

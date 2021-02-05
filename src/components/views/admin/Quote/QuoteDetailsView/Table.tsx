@@ -16,12 +16,9 @@ import {
     Chip,
     
 } from '@material-ui/core';
+import AddBoxIcon from '@material-ui/icons/AddBox';
 import { Link, useHistory } from 'react-router-dom';
-import { AuthContext } from '../../../../../context/auth-context';
-import { useHttpClient } from '../../../../../hooks/http-hook';
-import SuccessModal from '../../../../SuccessModal';
-import { IQuote } from '../../../../../types/appTypes';
-import { AppState } from '../../../../../stores/root-reducer';
+import { IItem, IQuote,QuoteDetails } from '../../../../../types/appTypes';
 import { selectedQuote } from '../../../../../stores/quotes/QuotesActions';
 
 const useStyles = makeStyles((theme) => ({
@@ -33,68 +30,54 @@ const useStyles = makeStyles((theme) => ({
 
 interface IProps {
     className?: string;
-    quotesDetails: IQuote[];
-    totalRecords: number;
-    limit: number;
-    page: number;
-    onPageChange: (newPage: number) => void;
-    onRowsLimitChange: (newLimit: number) => void;
+    quotesItems: IItem[];
+   
 }
 
 const QuoteTable: React.FC<IProps> = ({
     className,
-    quotesDetails,
-    totalRecords,
-    limit,
-    page,
-    onPageChange,
-    onRowsLimitChange,
+    quotesItems,
     ...rest
 }) => {
     const classes = useStyles();
-    const [custdata, setCustData] = useState(quotesDetails);
+    //const [custdata, setCustData] = useState(quotesItems);
     const history = useHistory();
     const dispatch = useDispatch();
 
-       const handleLimitChange = (event) => {
-        onRowsLimitChange(event.target.value);
-    };
-
-    const handlePageChange = (event, newPage: number) => {
-        onPageChange(newPage);
-    };
 
     const handleQuoteClick = (quoteid) => {
         dispatch(selectedQuote(quoteid));
         history.push('/admin/quotedetails');
     };
 
-    useEffect(() => {
-        if (quotesDetails.length > 0) {
-            setCustData(quotesDetails);
-        }
-    }, [quotesDetails]);
+    // useEffect(() => {
+    //     if (quotesItems.length > 0) {
+    //         setCustData(quotesItems);
+    //     }
+    // }, [quotesItems]);
 
     return (
         <Card className={clsx(classes.root, className)} {...rest}>
             <PerfectScrollbar>
              
-                <Box minWidth={1050}>
+                <Box>
                     <Table>
                         <TableHead>
                             <TableRow>
-                                <TableCell>Ref</TableCell>
-                                <TableCell>Customer Name</TableCell>
-                                <TableCell>Email</TableCell>
-                                <TableCell>Phone</TableCell>
-                                <TableCell>Delivery Type</TableCell>
-                                <TableCell>Date</TableCell>
-                                <TableCell>Status</TableCell>
+                                <TableCell></TableCell>
+                                <TableCell>ID</TableCell>
+                                <TableCell>Name</TableCell>
+                                <TableCell>Quantity Requested</TableCell>
+                                <TableCell>Stock</TableCell>
+                                {/* <TableCell>Substitute</TableCell>
+                                <TableCell>Quantity Available</TableCell>
+                                <TableCell>Notes</TableCell> */}
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {custdata.map((data: IQuote) => (
+                            {quotesItems.map((data: IItem) => (
                                 <TableRow hover key={data.id}>
+                                    <TableCell><AddBoxIcon></AddBoxIcon></TableCell>
                                     <TableCell
                                        
                                     >
@@ -108,36 +91,17 @@ const QuoteTable: React.FC<IProps> = ({
                                             </Typography>
                                         </Link>
                                     </TableCell>
-                                    <TableCell>{data.customerName}</TableCell>
-                                    <TableCell>{data.customerEmail}</TableCell>
-                                    <TableCell>{data.customerPhone}</TableCell>
-                                    <TableCell>{data.transportType}</TableCell>
-                                    <TableCell>{data.transportDate}</TableCell>
-
-                                    <TableCell>
-                                        <Chip
-                                            color="primary"
-                                            label={data.status}
-                                            size="small"
-                                        />
-                                    </TableCell>
+                                    <TableCell>{data.name}</TableCell>
+                                    <TableCell>{data.quantity}</TableCell>
+                                    <TableCell>{data.stock}</TableCell>
+                            
                                 </TableRow>
                             ))}
                         </TableBody>
                     </Table>
                 </Box>
             </PerfectScrollbar>
-            <TablePagination
-                component="div"
-                count={totalRecords}
-                onChangePage={handlePageChange}
-                onChangeRowsPerPage={handleLimitChange}
-                page={page}
-                rowsPerPage={limit}
-                rowsPerPageOptions={[]}
-                // rowsPerPageOptions={[5, 10]}
-            />
-
+          
             {/* <ConfirmDialog
                 title="Do you want to block/unbloack customer?"
                 open={confirmOpen}
