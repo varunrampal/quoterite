@@ -54,6 +54,10 @@ var quoteDetailsSchema = new mongoose.Schema({
     stock: {
       type: Number,
       required: false
+    },
+    price: {
+      type: Number,
+      required: false
     }
 
   }],

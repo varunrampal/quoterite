@@ -54,7 +54,12 @@ export interface IItem {
     id: number;
     name: string;
     quantity?: number;
-    stock?:number
+    stock?:number;
+    price?:number;
+    qtyallotted?:any;
+    totalprice?:number;
+    totsum?:number;
+    
 }
 
 //Quote

@@ -1,4 +1,4 @@
-import { Box, Container, Grid, makeStyles } from '@material-ui/core';
+import { Box, Container, Grid, makeStyles, TextField } from '@material-ui/core';
 import React, { useContext, useEffect, useState } from 'react';
 import { AuthContext } from '../../../../../context/auth-context';
 import { useHttpClient } from '../../../../../hooks/http-hook';
@@ -11,11 +11,11 @@ import Heading from '../../../../Header';
 import Page from '../../../../page';
 import QuoteHeader from '../../../../QuoteHeader';
 import SuccessModal from '../../../../SuccessModal';
+import NumberFormat from 'react-number-format';
+
 import {
     ModuleType,
-    OrderTransportType,
-    QuoteType,
-    QuoteStatus,
+  
 } from '../../../../../enums/app-enums';
 import { AppState } from '../../../../../stores/root-reducer';
 import { useSelector } from 'react-redux';
@@ -60,6 +60,7 @@ const QuoteDetailsView = () => {
     const [quoteItems, setquoteItems] = useState<IItem[]>([]);
     const [success, setSuccess] = useState<boolean>(false);
     const [message, setMessage] = useState<string>('');
+    const [totalAmount, settotalAmount] = useState<number>(0);
     const dialogTitle = 'Alert';
 
     const { selectedQuote } = useSelector((state: AppState) => state.quotes);
@@ -72,6 +73,30 @@ const QuoteDetailsView = () => {
     const handleDialogClose = () => {
         setOpenDialog(false);
     };
+    const handleInputChange = (
+        e:any,
+        index: number,
+        id: number,
+        stock: number,
+        price: number,
+        qtyalloted: any,
+        type: string
+    ) => {
+       
+        let totalPrice:number = 0;
+        let allottedQty =  qtyalloted === undefined ? 0: qtyalloted;
+        const list:IItem[] = [...quoteItems];
+        if(type === 'price') {
+             list[index].price = price;
+         }
+        totalPrice = Number((price*allottedQty).toFixed(2));
+        list[index].totalprice = Number(totalPrice);
+        list[index].qtyallotted = allottedQty;
+      
+        const result = list.reduce( ( sum, { totalprice = 0 } ) => sum + totalprice , 0);
+        settotalAmount(Number(result.toFixed(2)));
+        setquoteItems(list);
+    };
 
     const getQuoteDetails = async () => {
         try {
@@ -82,8 +107,7 @@ const QuoteDetailsView = () => {
             });
 
             if (responseData.code === 200) {
-                console.log(responseData.results.items);
-                setquoteItems(responseData.results.quoteDetails.items);
+                  setquoteItems(responseData.results.quoteDetails.items);
             }
         } catch (error) {
             console.log(error);
@@ -112,22 +136,20 @@ const QuoteDetailsView = () => {
                     <AppBreadCrumb></AppBreadCrumb>
                 </Box>
                 <Grid item container direction="row" spacing={1}>
-                    {propObj !== null ? (
-                        <Grid item xs={8}>
-                            <Box m={1} p={2}>
-                                <QuoteHeader
-                                    propertyObj={propObj}
-                                    type={'admin'}
-                                ></QuoteHeader>
-                            </Box>
-                        </Grid>
-                    ) : (
-                        <React.Fragment></React.Fragment>
-                    )}
-                    {
-                        quoteItems.length > 0 ? (<QuoteTable quotesItems = {quoteItems} ></QuoteTable>):(<></>)
-                    }
-                  
+                    <Grid item xs={8}>
+                        <Box m={1} p={2} style={{ width: '100%' }}>
+                            <QuoteHeader
+                                propertyObj={propObj}
+                                type={'admin'}
+                            ></QuoteHeader>
+                       </Box>
+                        <QuoteTable
+                            quotesItems={quoteItems}
+                            totalAmount = {totalAmount}
+                            onChange={handleInputChange}
+                        ></QuoteTable>
+                    </Grid>
+
                     <Grid item xs={4} alignItems="flex-end">
                         <AppTimeLine
                             moduleType={ModuleType.Quote}

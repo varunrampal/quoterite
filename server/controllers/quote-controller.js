@@ -278,9 +278,9 @@ const getAdminQuote = async (req, res, next) => {
         if (!quote) {
             return res.status(400).json(error("Invalid quote", res.statusCode));
         }
-
+       
         const quoteItems = quote.items;
-
+       
         if (quoteItems.length > 0) {
             let propertyDetails = '';
             let user = {};
@@ -290,11 +290,16 @@ const getAdminQuote = async (req, res, next) => {
                 let itemDetails = await Item.find({
                     id: quoteItems[item].id
                 }, {
+                    "id":1,
                     "stock": 1,
+                    "price": 1,
                     "_id": 0
                 });
-                quoteItems[item].stock = itemDetails[0].stock
-            }
+                          
+                quoteItems[item].stock = itemDetails[0].stock;
+                quoteItems[item].price = itemDetails[0].price;
+             
+           }
             const userDetails = await User.findOne({
                 _id: quote.submitedBy
             });

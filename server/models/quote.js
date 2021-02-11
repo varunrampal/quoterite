@@ -31,7 +31,14 @@ var quoteSchema = new mongoose.Schema({
           },
           stock: {
             type: Number,
-            required: false
+            required: false,
+            default:0
+          },
+          price: {
+            type:Number,
+            required: false,
+            default:0
+
           }
 
    }],

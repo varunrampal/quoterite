@@ -19,6 +19,10 @@ const itemSchema = new mongoose.Schema({
         type: Number,
         required: true,
     },
+    price:{
+        type: Number,
+        required: true,
+    },
     active: {
         type: Boolean,
         required: false,
