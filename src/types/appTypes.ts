@@ -53,6 +53,7 @@ export type PropertyState = {
 export interface IItem {
     id: number;
     name: string;
+    commonName?:string;
     quantity?: number;
     stock?:number;
     price?:number;

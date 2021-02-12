@@ -56,7 +56,7 @@ const Toolbar: React.FC<IProps> = ({ className, filterCustomers, ...rest }) => {
           color="primary"
           variant="contained"
         >
-          Add customer
+          Create quote
         </Button>
       </Box>
       <Box mt={3}>

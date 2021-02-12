@@ -47,6 +47,10 @@ var quoteDetailsSchema = new mongoose.Schema({
       type: String,
       required: true,
     },
+    commonName:{
+      type: String,
+      required: false,
+    },
     quantity: {
       type: Number,
       required: true,

@@ -13,22 +13,34 @@ import {
     TableContainer,
     Paper,
     TextField,
+    Grid,
+    ButtonBase,
 } from '@material-ui/core';
 import IconButton from '@material-ui/core/IconButton';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import { Scrollbars } from 'rc-scrollbars';
 import { IItem } from '../../../../../types/appTypes';
-import NumberFormat from 'react-number-format';
 
 const useRowStyles = makeStyles({
     root: {
         '& > *': {
             borderBottom: 'unset',
+            flexGrow: 1,
         },
     },
     cellTextRed: {
         color: '#FF0000',
+    },
+    image: {
+        width: 128,
+        height: 128,
+    },
+    img: {
+        margin: 'auto',
+        display: 'block',
+        maxWidth: '100%',
+        maxHeight: '100%',
     },
 });
 
@@ -91,14 +103,18 @@ const QuoteTable: React.FC<IProps> = ({
                         ))}
                         <TableRow>
                             <TableCell rowSpan={7} />
-                            <TableCell colSpan={5}>  <strong>Subtotal</strong></TableCell>
+                            <TableCell colSpan={5}>
+                                {' '}
+                                <strong>Subtotal</strong>
+                            </TableCell>
                             <TableCell align="right">
                                 <strong> ${totalAmount.toFixed(2)}</strong>
                             </TableCell>
                         </TableRow>
                         <TableRow>
                             <TableCell colSpan={4}>
-                            <strong>Tax</strong>({`PST ${PSTRate}% + GST ${GSTRate}%`})
+                                <strong>Tax</strong>(
+                                {`PST ${PSTRate}% + GST ${GSTRate}%`})
                             </TableCell>
                             <TableCell align="right">{`${(
                                 PSTRate + GSTRate
@@ -114,7 +130,9 @@ const QuoteTable: React.FC<IProps> = ({
                             </TableCell>
                         </TableRow>
                         <TableRow>
-                            <TableCell colSpan={5}><strong>Total</strong></TableCell>
+                            <TableCell colSpan={5}>
+                                <strong>Total</strong>
+                            </TableCell>
                             <TableCell align="right">
                                 <strong>
                                     $
@@ -127,7 +145,6 @@ const QuoteTable: React.FC<IProps> = ({
                             </TableCell>
                         </TableRow>
                     </TableBody>
-                   
                 </Table>
             </Scrollbars>
         </TableContainer>
@@ -162,12 +179,11 @@ function Row(props: {
             onChange(e, index, id, stock, price, e.target.value, 'qty');
         }
     };
- 
+
     const handlePriceInputChange = (e, index, id, stock, qtyAllotted) => {
         let allotedQty = qtyAllotted === undefined ? 0 : qtyAllotted;
         onChange(e, index, id, stock, e.target.value, allotedQty, 'price');
     };
-    
 
     return (
         <React.Fragment>
@@ -199,7 +215,7 @@ function Row(props: {
                 )}
 
                 <TableCell align="right">
-                      <TextField
+                    <TextField
                         name="qtyallotted"
                         type="number"
                         variant="standard"
@@ -208,6 +224,7 @@ function Row(props: {
                         value={row.qtyallotted}
                         InputProps={{
                             inputProps: {
+                                startAdornment: '$',
                                 max: `${row.stock}`,
                                 min: 1,
                             },
@@ -263,13 +280,67 @@ function Row(props: {
                 >
                     <Collapse in={open} timeout="auto" unmountOnExit>
                         <Box margin={1}>
-                            <Typography
-                                variant="h6"
-                                gutterBottom
-                                component="div"
-                            >
-                                History
-                            </Typography>
+                            <Grid container spacing={2}>
+                                <Grid item>
+                                    <ButtonBase className={classes.image}>
+                                        <img
+                                            className={classes.img}
+                                            alt="item pic"
+                                            src={`/static/images/items/${row.name}.jpg`}
+                                        />
+                                    </ButtonBase>
+                                </Grid>
+                                <Grid item xs={12} sm container>
+                                    <Grid
+                                        item
+                                        xs
+                                        container
+                                        direction="column"
+                                        spacing={2}
+                                    >
+                                        <Grid item xs>
+                                            <Typography
+                                                gutterBottom
+                                                variant="subtitle1"
+                                            >
+                                              {row.commonName}
+                                            </Typography>
+                                            <Typography
+                                                variant="body2"
+                                                gutterBottom
+                                            >
+                                              {row.id}
+                                            </Typography>
+                                            <Typography
+                                                variant="body2"
+                                                color="textSecondary"
+                                            >
+                                               Latest price: $2.50
+                                            </Typography>
+                                        </Grid>
+                                        <Grid item>
+                                            Substitute: xyz
+                                            <Typography
+                                                variant="body2"
+                                                style={{ cursor: 'pointer' }}
+                                             >
+                                             Add
+                                            </Typography>
+                                        </Grid>
+                                    </Grid>
+                                    <Grid item>
+                                    <TextField
+                                id="notes"
+                                label="Notes"
+                                multiline
+                                rows={3}
+                                variant="outlined"
+                                style={{width:200}}
+                            />
+                                    </Grid>
+                                </Grid>
+                            </Grid>
+                           
                         </Box>
                     </Collapse>
                 </TableCell>

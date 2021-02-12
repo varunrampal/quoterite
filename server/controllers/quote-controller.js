@@ -293,11 +293,13 @@ const getAdminQuote = async (req, res, next) => {
                     "id":1,
                     "stock": 1,
                     "price": 1,
+                    "commonName":1,
                     "_id": 0
                 });
                           
                 quoteItems[item].stock = itemDetails[0].stock;
                 quoteItems[item].price = itemDetails[0].price;
+                quoteItems[item].commonName = itemDetails[0].commonName;
              
            }
             const userDetails = await User.findOne({

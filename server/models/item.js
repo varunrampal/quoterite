@@ -11,6 +11,11 @@ const itemSchema = new mongoose.Schema({
         required: true,
         maxlength: 80,
     },
+    commonName: {
+        type: String,
+        required: true,
+        maxlength: 300,
+    },
     alternateName: {
         type: String,
         required: false,
