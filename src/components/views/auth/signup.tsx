@@ -209,7 +209,7 @@ const SignUp: React.FunctionComponent = () => {
                     } = props;
                     return (
                         <Paper className={classes.paper}>
-                    <div className={classes.logoText}>Quoterite</div>
+                    <div className={classes.logoText}>Finnso</div>
                     <Avatar className={classes.avatar}>
                         <AccountCircleRounded fontSize="inherit" />
                     </Avatar>

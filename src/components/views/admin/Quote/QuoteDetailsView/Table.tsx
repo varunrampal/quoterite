@@ -20,6 +20,7 @@ import IconButton from '@material-ui/core/IconButton';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import { Scrollbars } from 'rc-scrollbars';
+import { Link } from 'react-router-dom';
 import { IItem } from '../../../../../types/appTypes';
 
 const useRowStyles = makeStyles({
@@ -184,6 +185,7 @@ function Row(props: {
         let allotedQty = qtyAllotted === undefined ? 0 : qtyAllotted;
         onChange(e, index, id, stock, e.target.value, allotedQty, 'price');
     };
+    const handleSubstituteClick = (xyz) => {};
 
     return (
         <React.Fragment>
@@ -303,44 +305,62 @@ function Row(props: {
                                                 gutterBottom
                                                 variant="subtitle1"
                                             >
-                                              {row.commonName}
+                                                Common Name: {row.commonName}
                                             </Typography>
                                             <Typography
                                                 variant="body2"
                                                 gutterBottom
                                             >
-                                              {row.id}
+                                                ID: {row.id}
                                             </Typography>
-                                            <Typography
-                                                variant="body2"
-                                                color="textSecondary"
-                                            >
-                                               Latest price: $2.50
+                                            <Typography variant="body2">
+                                                Latest price: $2.50
                                             </Typography>
                                         </Grid>
                                         <Grid item>
-                                            Substitute: xyz
-                                            <Typography
-                                                variant="body2"
-                                                style={{ cursor: 'pointer' }}
-                                             >
-                                             Add
-                                            </Typography>
+                                            <Grid container spacing={2}>
+                                                <Grid item>
+                                                    <Typography
+                                                        variant="body2"
+                                                        style={{
+                                                            cursor: 'pointer',
+                                                        }}
+                                                    >
+                                                        Substitute:
+                                                    </Typography>
+                                                    <Grid item>
+                                                        <Link
+                                                            to="#"
+                                                            onClick={() =>
+                                                                handleSubstituteClick(
+                                                                    'xyz'
+                                                                )
+                                                            }
+                                                        >
+                                                            <Typography
+                                                                color="textPrimary"
+                                                                variant="body1"
+                                                            >
+                                                                XYZ
+                                                            </Typography>
+                                                        </Link>
+                                                    </Grid>
+                                                </Grid>
+                                            </Grid>
                                         </Grid>
                                     </Grid>
                                     <Grid item>
-                                    <TextField
-                                id="notes"
-                                label="Notes"
-                                multiline
-                                rows={3}
-                                variant="outlined"
-                                style={{width:200}}
-                            />
+                                        <TextField
+                                            id="notes"
+                                            label="Notes"
+                                            multiline
+                                            rows={3}
+                                            variant="outlined"
+                                            style={{ width: 200 }}
+                                        />
                                     </Grid>
                                 </Grid>
                             </Grid>
-                           
                         </Box>
                     </Collapse>
                 </TableCell>

@@ -11,7 +11,6 @@ import Heading from '../../../../Header';
 import Page from '../../../../page';
 import QuoteHeader from '../../../../QuoteHeader';
 import SuccessModal from '../../../../SuccessModal';
-import NumberFormat from 'react-number-format';
 
 import {
     ModuleType,
@@ -22,7 +21,6 @@ import { useSelector } from 'react-redux';
 import {
     IItem,
     IProperty,
-    IQuote,
     QuoteDetails,
 } from '../../../../../types/appTypes';
 import { REACT_APP_API_BASE_URL } from '../../../../../utils/constants';

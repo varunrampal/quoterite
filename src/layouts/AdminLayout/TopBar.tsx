@@ -67,7 +67,7 @@ const TopBar: React.FC<IProps> = ({ className, onMobileNavOpen, ...rest }) => {
             <Toolbar>
                 <RouterLink to={logoLink} style={{ textDecoration: 'none' }}>
                     {' '}
-                    <div className={classes.logoText}>Quoterite</div>
+                    <div className={classes.logoText}>Finnso</div>
                 </RouterLink>
                 <Box flexGrow={1} />
                 <Hidden mdDown>

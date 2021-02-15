@@ -17,11 +17,7 @@ import {
     
 } from '@material-ui/core';
 import { Link, useHistory } from 'react-router-dom';
-import { AuthContext } from '../../../../../context/auth-context';
-import { useHttpClient } from '../../../../../hooks/http-hook';
-import SuccessModal from '../../../../SuccessModal';
 import { IQuote } from '../../../../../types/appTypes';
-import { AppState } from '../../../../../stores/root-reducer';
 import { selectedQuote } from '../../../../../stores/quotes/QuotesActions';
 
 const useStyles = makeStyles((theme) => ({

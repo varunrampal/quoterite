@@ -232,7 +232,7 @@ const Login: React.FC = () => {
                 <CssBaseline />
 
                 <Paper className={classes.paper} elevation={6} square>
-                    <div className={classes.logoText}>Quoterite</div>
+                    <div className={classes.logoText}>Finnso</div>
                     <Avatar className={classes.avatar}>
                         <AccountCircleRounded fontSize="inherit" />
                     </Avatar>
