@@ -1,6 +1,7 @@
 import React, { Suspense } from 'react';
 import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 import Login from './components/views/auth/login';
+import SignIn from './components/views/auth/sigin';
 import Signup from './components/views/auth/signup';
 import { AuthContext } from './context/auth-context';
 import { useAuth } from './hooks/auth-hook';
@@ -40,7 +41,8 @@ const Router = () => {
         routes = (
             <Switch>
                 <Route path="/" exact>
-                    <Login />
+                    <SignIn/>
+                    {/* <Login /> */}
                 </Route>
                 <Route path="/signup">
                     <Signup />

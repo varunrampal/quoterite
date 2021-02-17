@@ -365,7 +365,7 @@ const Login: React.FC = () => {
                                             sm={10}
                                             xs={10}
                                         >
-                                            Don't have an account?{' '}
+                                            Don't have an account?
                                             <AppLink
                                                 to="/signup"
                                                 variant="body1"
