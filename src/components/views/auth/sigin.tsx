@@ -8,7 +8,6 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import { TextField, Theme, makeStyles, Grid } from '@material-ui/core';
 // import FormControlLabel from '@material-ui/core/FormControlLabel';
 // import Checkbox from '@material-ui/core/Checkbox';
-import Link from '@material-ui/core/Link';
 import Paper from '@material-ui/core/Paper';
 import Box from '@material-ui/core/Box';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
@@ -20,17 +19,15 @@ import ErrorModal from '../../../ui/ErrorModal';
 import { AuthContext } from '../../../context/auth-context';
 import AppLink from '../../AppLink';
 import { REACT_APP_API_BASE_URL } from '../../../utils/constants';
-import Background from '../../../assets/login-background.jpg';
 import { GoogleLogin } from 'react-google-login';
 import { green } from '@material-ui/core/colors';
 import Copyright from '../../CopyRight';
-
-
-
+//import  Logo from '../../../assets/images/color_logo_transparent.svg';
+import Logo from '../../Logo';
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
         height: '100vh',
-    },
+          },
     image: {
         backgroundImage: 'url(/static/images/login-background.jpg)',
         backgroundRepeat: 'no-repeat',
@@ -42,18 +39,25 @@ const useStyles = makeStyles((theme: Theme) => ({
         backgroundPosition: 'center',
     },
     paper: {
-        margin: theme.spacing(8, 4),
+        //margin: theme.spacing(10, 4),
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
     },
     googleButton: {
-        marginTop: '10px',
+        backgroundColor: '#4285f4',
+        marginTop: '15px',
         width: '100%',
-        fontSize: '18px',
-        fontWeight: 'bold',
-        textAlign: 'center'
+     },
+    googleBtnText: {
+        float: 'right',
+        margin: '2px 11px 0 0',
+        color: '#696969',
+        fontSize: '17px',
+        letterSpacing: '0.2px',
+        fontFamily: 'Roboto'
     },
+
     avatar: {
         margin: theme.spacing(1),
         backgroundColor: green[500],
@@ -65,6 +69,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     submit: {
         margin: theme.spacing(3, 0, 2),
     },
+    logo: {
+        margin: '5px' 
+      
+    },
+
+    
 }));
 
 export interface ILoginForm {
@@ -198,6 +208,10 @@ const SignIn: React.FC = () => {
                 square
             >
                 <div className={classes.paper}>
+                    <div className = {classes.logo}>
+                    <Logo type = "main"/>
+                    </div>
+                   
                     <Avatar className={classes.avatar}>
                         <LockOutlinedIcon />
                     </Avatar>
@@ -292,26 +306,34 @@ const SignIn: React.FC = () => {
                                     </AppButton>
                                     <GoogleLogin
                                         clientId={clientId}
-                                        buttonText="Login with Google&nbsp;&nbsp;"
+                                       
                                         onSuccess={handleGoogleLogin}
                                         onFailure={handleGoogleLoginFailure}
                                         cookiePolicy={'single_host_origin'}
                                         //isSignedIn={true}
                                         className={classes.googleButton}
-                                    ></GoogleLogin>
-                                    <Grid container>
+                                    > <p className={classes.googleBtnText}><b>Sign in with google</b></p></GoogleLogin>
+                                    <Grid container style={{marginTop:'10px'}}>
                                         <Grid item xs>
-                                            <Link href="#" variant="body2">
-                                                Forgot password?
-                                            </Link>
+                                            {/* <Link href="#" variant="body2"  color="textPrimary">
+                                               
+                                            </Link> */}
+                                            <AppLink
+                                                to="#"
+                                                variant="body2"
+                                                color="primary"
+                                            >
+                                               <b>Forgot password?</b>
+                                            </AppLink>
                                         </Grid>
                                         <Grid item>
+                                            <span color="textPrimary"><b>Not registered? </b></span>
                                             <AppLink
                                                 to="/signup"
                                                 variant="body2"
                                                 color="primary"
                                             >
-                                                Don't have an account? Sign Up
+                                                Sign up here!
                                             </AppLink>
                                         </Grid>
                                     </Grid>
