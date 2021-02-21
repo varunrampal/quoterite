@@ -3,7 +3,7 @@ import React from 'react';
 interface IProps {
   type: "main" | "inner"
 }
-
+//Logo for inner and main pages
 const Logo: React.FC<IProps> = ({type}) => {
   return (
     <React.Fragment>
