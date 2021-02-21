@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import { useHistory } from 'react-router-dom';
 import { Formik, Form, FormikProps } from 'formik';
@@ -24,6 +24,7 @@ import { green } from '@material-ui/core/colors';
 import Copyright from '../../CopyRight';
 //import  Logo from '../../../assets/images/color_logo_transparent.svg';
 import Logo from '../../Logo';
+import SyncErrorModal from '../../../ui/ErrorHandling/SyncErrorModal';
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
         height: '100vh',
@@ -87,6 +88,7 @@ const initialFormValues: ILoginForm = {
     password: '',
 };
 
+/***************************User credentials validation schema******************************************/
 const formValidationSchema = Yup.object().shape({
     email: Yup.string()
         .email()
@@ -100,15 +102,15 @@ const clientId =
 const SignIn: React.FC = () => {
     const classes = useStyles();
     const history = useHistory();
+    const [syncError, setSyncError] = useState<string>('');
 
     const { isLoading, error, sendRequest, clearError } = useHttpClient();
 
     const auth = useContext(AuthContext);
 
+    /***************************On login button click******************************************/
     const loginUser = async (values: ILoginForm, resetForm: Function) => {
         try {
-            // const endpoint = process.env.REACT_APP_API_BASE_URL + 'user/login';
-
             const endpoint = `${REACT_APP_API_BASE_URL}/user/login`;
             const responseData = await sendRequest(
                 endpoint,
@@ -145,6 +147,8 @@ const SignIn: React.FC = () => {
             }
         }
     };
+
+   /***************************On Google login button click******************************************/
     const handleGoogleLogin = (user) => {
         const userObj = {
             name: user.profileObj.name,
@@ -156,9 +160,14 @@ const SignIn: React.FC = () => {
         createNewUser(userObj);
     };
 
+     /***************************On Google login failure******************************************/
     const handleGoogleLoginFailure = (err) => {
-        console.log(err);
+       // console.log(err);
+        setSyncError('Error while login using Google. Please try again later.');
+            
     };
+
+     /***************************Create new user On Google login******************************************/
     const createNewUser = async (userObj) => {
         try {
             const endpoint = `${REACT_APP_API_BASE_URL}/user/signup`;
@@ -189,13 +198,17 @@ const SignIn: React.FC = () => {
         } catch (err) {
             console.log(err);
         }
+     };
+
+     const closeSyncErrorModal = () => {
+        setSyncError('');
     };
 
     return (
         <Grid container component="main" className={classes.root}>
             {isLoading && <LoadingSpinner asOverlay />}
             <ErrorModal error={error} onClear={clearError} />
-
+            <SyncErrorModal error={syncError} onClose={closeSyncErrorModal}/>
             <CssBaseline />
             <Grid item xs={false} sm={4} md={7} className={classes.image} />
             <Grid
@@ -306,7 +319,6 @@ const SignIn: React.FC = () => {
                                     </AppButton>
                                     <GoogleLogin
                                         clientId={clientId}
-                                       
                                         onSuccess={handleGoogleLogin}
                                         onFailure={handleGoogleLoginFailure}
                                         cookiePolicy={'single_host_origin'}
