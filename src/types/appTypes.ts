@@ -80,6 +80,7 @@ export interface IQuote {
     customerPhone?: string
 }
 
+
 export type QuoteState = {
     quotes: IQuote[];
     currentPage: number;
@@ -122,3 +123,5 @@ export type QuoteDetails = {
       transportType: string,
       transportDate: string
 }
+
+

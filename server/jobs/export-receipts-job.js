@@ -157,7 +157,7 @@
 //                                     winston.info(
 //                                         `CSV File deleted from webserver User: ${userId}, date: ${new Date()}, duration: ${month}`
 //                                     );
-                
+
 //                                     //Generate short link of csv file for email(not working because sengrid is wrapping it's on link)
 //                                     if (String(process.env.BITLY_LINKS) == 'true') {
 //                                         shortenUrl(response.data.url).then(
@@ -192,6 +192,7 @@
 
 //     switch (exportReceiptBy) {
 //         case appEnums.EXPORTRECEIPTS.EMAIL:
+
           
 //             sendEmail(emailId, fileDownloadLink, done);
 //             break;

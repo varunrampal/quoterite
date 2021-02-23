@@ -1,3 +1,4 @@
+
 // var aws = require('aws-sdk');
 // const winston = require('winston');
 // const {
@@ -12,6 +13,7 @@
 // });
 
 // const S3_BUCKET = Bucket;
+
 
 // const sign_s3 = (req, res) => {
 
