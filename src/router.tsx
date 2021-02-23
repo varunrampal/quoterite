@@ -1,6 +1,7 @@
 import React, { Suspense } from 'react';
 import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 import Login from './components/views/auth/login';
+import SignIn from './components/views/auth/sigin';
 import Signup from './components/views/auth/signup';
 import { AuthContext } from './context/auth-context';
 import { useAuth } from './hooks/auth-hook';
@@ -12,8 +13,9 @@ import CreateQuoteView from './components/views/customer/Quotes/create';
 import AdminLayoutRoute from './layouts/AdminLayout';
 import NotFoundView from './components/views/errors/NotFoundView';
 import ThemeProvider from './theme/ThemeProvider';
+import QuoteListView from './components/views/admin/Quote/QuoteListView';
 import CustomerListView from './components/views/admin/CustomerListView';
-
+import QuoteDetailsView from './components/views/admin/Quote/QuoteDetailsView';
 
 const Router = () => {
     let routes;
@@ -33,11 +35,14 @@ const Router = () => {
     //     return token ? <Component /> : <Redirect to="/" />;
     // };
 
+    
     if (!token) {
+      
         routes = (
             <Switch>
                 <Route path="/" exact>
-                    <Login />
+                    <SignIn/>
+                    {/* <Login /> */}
                 </Route>
                 <Route path="/signup">
                     <Signup />
@@ -46,18 +51,29 @@ const Router = () => {
             </Switch>
         );
     } else if (token && userRole === 1) {
+       
         routes = (
             <ThemeProvider>
                 <Switch>
                     <AdminLayoutRoute
                         path="/admin/dashboard"
                         component={DashboardView}
+                        exact
                     />
                     <AdminLayoutRoute
                         path="/admin/customerslist"
                         component={CustomerListView}
                     />
-                    <AdminLayoutRoute path="*" component={NotFoundView} />
+                     <AdminLayoutRoute
+                        path="/admin/quoteslist"
+                        component={QuoteListView}
+                    />
+                     <AdminLayoutRoute
+                        path="/admin/quotedetails"
+                        component={QuoteDetailsView}
+                    />
+                    
+                    <AdminLayoutRoute path="*" component={DashboardView} />
                 </Switch>
             </ThemeProvider>
         );

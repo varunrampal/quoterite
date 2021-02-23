@@ -15,6 +15,7 @@ interface IProps {
 }
 
 const QuoteHeader: React.FC<IProps> = ({ propertyObj, type }) => {
+    
     const propertyAddress = `${propertyObj.address.street}, ${propertyObj.address.city}, ${propertyObj.address.state} ${propertyObj.address.postcode}`;
     return (
         <Grid container spacing={3}>

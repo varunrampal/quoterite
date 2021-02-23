@@ -21,7 +21,6 @@
         Order: 'order',
         Delivery: 'delivery'
      }
-
 }
 
 module.exports = {

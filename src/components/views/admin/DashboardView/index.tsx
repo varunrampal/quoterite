@@ -1,13 +1,12 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Box, Container, Grid, makeStyles } from '@material-ui/core';
 import Page from '../../../page';
-import Widget from './Widget';
+import Widget from '../../../Widget';
 import { REACT_APP_API_BASE_URL } from '../../../../utils/constants';
 import { AuthContext } from '../../../../context/auth-context';
 import { useHttpClient } from '../../../../hooks/http-hook';
 import Heading from '../../../Header';
 import AppBreadCrumb from '../../../AppBreadCrumb';
-import moment from 'moment';
 import Sales from './sales';
 import OrderDeliveryMode from './OrderDeliveryMode';
 import LatestQuotes from './LatestQuotes';
@@ -23,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
     paper: {
         padding: theme.spacing(2),
         display: 'flex',
-        overflow: 'auto',
+        //overflow: 'auto',
         flexDirection: 'column',
     },
     fixedHeight: {
@@ -71,7 +70,7 @@ const Dashboard = () => {
                 <Grid container spacing={3}>
                     <Grid item lg={3} sm={6} xl={3} xs={12}>
                         <Widget
-                            type="quote"
+                            type="pendingquote"
                             heading="PENDING QUOTES"
                             content={pendingQuotes}
                         />

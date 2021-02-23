@@ -2,16 +2,29 @@ const mongoose = require('mongoose');
 const autoIncrement = require('mongoose-plugin-autoinc');
 
 const itemSchema = new mongoose.Schema({
+    id: {
+        type: Number,
+        required: false
+       },
     name: {
         type: String,
         required: true,
         maxlength: 80,
+    },
+    commonName: {
+        type: String,
+        required: true,
+        maxlength: 300,
     },
     alternateName: {
         type: String,
         required: false,
     },
     stock: {
+        type: Number,
+        required: true,
+    },
+    price:{
         type: Number,
         required: true,
     },

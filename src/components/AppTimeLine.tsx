@@ -19,10 +19,10 @@ import { ModuleType } from '../enums/app-enums';
 const useStyles = makeStyles((theme) => ({
     paper: {
         padding: '6px 16px',
-        height: '40px'
+        // height: '40px'
     },
     primaryTail: {
-        backgroundColor: theme.palette.primary.light,
+        backgroundColor: '#DCDCDC',
         height: 70
     },
     secondaryTail: {
@@ -92,7 +92,7 @@ const AppTimeline: React.FC<IProps> = ({
                     )}
                 </TimelineSeparator>
                 <TimelineContent>
-                    <Paper elevation={3} className={classes.paper} style={{width:80}}>
+                    <Paper elevation={3} className={classes.paper} >
                         <Typography variant="h6" component="h1">
                             Quote
                         </Typography>

@@ -13,7 +13,7 @@ var quoteSchema = new mongoose.Schema({
         required:true
     },
     property:{
-      type: String,
+      type: Schema.Types.ObjectId, ref: 'Property',
       required:false
     },
    items:[{
@@ -25,10 +25,26 @@ var quoteSchema = new mongoose.Schema({
             type: String,
             required: true,
           },
+          commonName:{
+            type: String,
+            required: false,
+          },
           quantity:{
             type: Number,
             required: true,
+          },
+          stock: {
+            type: Number,
+            required: false,
+            default:0
+          },
+          price: {
+            type:Number,
+            required: false,
+            default:0
+
           }
+
    }],
    notes:{
        type: String,

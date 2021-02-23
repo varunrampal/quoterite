@@ -30,7 +30,11 @@ const userSchema = new mongoose.Schema({
     active: {
         type: Boolean,
         required: true
-    }
+    },
+    type: {
+        type: String,
+        required: true
+    },
 
 });
 
