@@ -4,7 +4,7 @@ const checkAuth = require('../middleware/check-auth');
 
 const adminDashboardController = require('../controllers/admin-dashboard-controller');
 
-//router.use(checkAuth);
+router.use(checkAuth);
 
 router.get(
     '/dashboard/widget',

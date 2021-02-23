@@ -1,8 +1,34 @@
-const { success, error } = require('../helpers/api-response');
-const { User } = require('../models/user');
-const { Quote } = require('../models/quote');
-const emailJob = require('../jobs/send-email-job');
-const {receiver_email, sender_email} = require('../utils/constants');
+const {
+    success,
+    error
+} = require('../helpers/api-response');
+const {
+    User
+} = require('../models/user');
+const {
+    Quote
+} = require('../models/quote');
+const {
+    QuoteDetails
+} = require('../models/quoteDetails');
+
+const {
+    Item
+} = require('../models/item');
+const {
+    Property
+} = require('../models/property');
+//const emailJob = require('../jobs/send-email-job');
+const {
+    receiver_email,
+    sender_email
+} = require('../utils/constants');
+const sgMail = require('@sendgrid/mail');
+const winston = require('winston');
+const {
+    SENDGRID_API_KEY,
+} = require('../utils/constants');
+
 // @route POST /quote
 // @desc to create quote, returns quote id
 // @access Private
@@ -51,13 +77,11 @@ const createQuote = async (req, res, next) => {
                     );
             } else {
 
-                const receipentEmail = receiver_email !== '' ? receiver_email: user.email;
-                //sendEmail(receipentEmail, user, createdQuote);
-             
+                const receipentEmail = receiver_email !== '' ? receiver_email : user.email;
+                sendEmail(receipentEmail, user, createdQuote);
                 return res.status(201).json(
                     success(
-                        'Quote created successfully.',
-                        {
+                        'Quote created successfully.', {
                             quoteId: createdQuote.id,
                         },
                         res.statusCode,
@@ -73,9 +97,9 @@ const sendEmail = (emailId, userObj, createdQuote) => {
     //email data
     let quoteList = '';
 
-  createdQuote.items.forEach((item,i) => {
-    quoteList = `${quoteList}<div>${i+1})${item.name}: ${item.quantity}</div>`; 
-  });
+    createdQuote.items.forEach((item, i) => {
+        quoteList = `${quoteList}<div>${i+1})${item.name}: ${item.quantity}</div>`;
+    });
     const job = {
         title: 'Send-quote-request-notification' + emailId,
         msg: {
@@ -95,13 +119,31 @@ const sendEmail = (emailId, userObj, createdQuote) => {
         },
     };
 
+    try {
+
+        //setup API key
+        sgMail.setApiKey(SENDGRID_API_KEY);
+
+        //Send mail
+        sgMail.send(job.msg).then((result) => {
+
+            //email sent
+            winston.info(`Email sent, User: ${job.msg.to}, date: ${new Date()}`);
+            // DoneCallback();
+            //return result;
+        }).catch((error) => console.log(error));
+
+    } catch (ex) {
+        winston.info(`Error in sending email, User: ${job.msg.to}, date: ${new Date()}, error: ${ex}`);
+    }
+
     //create job by calling createEmailJob method
-    emailJob
-        .createEmailJob(job)
-        .then(() => {
-            //done();
-        })
-        .catch((error) => console.log(error)); //done(error));
+    // emailJob
+    //     .createEmailJob(job)
+    //     .then(() => {
+    //         //done();
+    //     })
+    //     .catch((error) => console.log(error)); //done(error));
 };
 
 // @route GET quote/:id
@@ -110,19 +152,215 @@ const sendEmail = (emailId, userObj, createdQuote) => {
 
 const getPendingQuotes = async (req, res, next) => {
 
-    const pendingQuotes = await Quote.find({status: 'OPEN'}).count();
+    const pendingQuotes = await Quote.find({
+        status: 'OPEN'
+    }).count();
     return res.status(200).json(
+        success(
+            'Pending quotes.', {
+                pendingQuotes,
+            },
+            res.statusCode
+        )
+    );
+}
+
+// @route GET quote/count
+// @desc get quotes count
+// @access Private
+const getTotalQuotes = async (req, res, next) => {
+
+    const quoteCount = await Quote.find().count();
+    res.status(200).json(
+        success(
+            'Quotes count', {
+                quoteCount,
+            },
+            res.statusCode,
+        ),
+    );
+};
+
+// @route POST quote/admin/quotes
+// @desc get all quotes
+// @access Private
+
+const getAllAdminQuotes = async (req, res, next) => {
+
+    try {
+
+        const pagination = req.body.pagination ? parseInt(req.body.pagination) : 10;
+
+        //PageNumber From which Page to Start
+        const pageNumber = req.body.page ? parseInt(req.body.page) : 1;
+
+        const Quotes = await Quote.aggregate([{
+
+                $lookup: {
+                    from: "users",
+                    localField: "submitedBy",
+                    foreignField: "_id",
+                    as: "user"
+                },
+              
+
+            }, 
+            {
+                $unwind: "$user"
+            },
+            {
+                $lookup: {
+                    from: "properties",
+                    localField: "property",
+                    foreignField: "_id",
+                    as: "property"
+                }
+            },
+            {
+                $unwind: "$property"
+            },
+            {
+                $sort: {
+                    'id': -1
+                }
+            }]).skip((pageNumber - 1) * pagination)
+            .limit(pagination);
+         
+            let quoteDetails = [];
+            Quotes.forEach((quote) => {
+                 quoteDetails.push({
+                 id: quote.id,
+                 createDate: quote.createDate,
+                 status: quote.status,
+                 transportType: quote.transportType,
+                 transportDate: quote.transportDate,
+                 customerName: quote.user.name,
+                 customerEmail: quote.user.email,
+                 customerPhone: quote.user.phone,
+                 property:quote.property
+             });
+            })
+        res.status(200).json(
             success(
-                'Pending quotes.',
-                {
-                    pendingQuotes,
+                'Quotes list', {
+                    Quotes:quoteDetails,
                 },
                 res.statusCode
             )
         );
+    } catch (err) {
+      
+        res
+            .status(500)
+            .json(
+                error(
+                    'Unexpected error has occured. Please try again later',
+                    res.statusCode,
+                ),
+            );
+    }
+}
+
+// @route GET quote/admin/:id
+// @desc get quote details
+// @access Private
+
+const getAdminQuote = async (req, res, next) => {
+
+    try {
+        const quoteId = req.params.quoteid;
+
+        const quote = await Quote.findOne({
+            id: quoteId
+        });
+
+        if (!quote) {
+            return res.status(400).json(error("Invalid quote", res.statusCode));
+        }
+       
+        const quoteItems = quote.items;
+       
+        if (quoteItems.length > 0) {
+            let propertyDetails = '';
+            let user = {};
+            let property = {};
+            for (let item in quoteItems) {
+
+                let itemDetails = await Item.find({
+                    id: quoteItems[item].id
+                }, {
+                    "id":1,
+                    "stock": 1,
+                    "price": 1,
+                    "commonName":1,
+                    "_id": 0
+                });
+                          
+                quoteItems[item].stock = itemDetails[0].stock;
+                quoteItems[item].price = itemDetails[0].price;
+                quoteItems[item].commonName = itemDetails[0].commonName;
+             
+           }
+            const userDetails = await User.findOne({
+                _id: quote.submitedBy
+            });
+            user = {
+                name: userDetails.name,
+                email: userDetails.email,
+                phone: userDetails.phone
+            }
+
+            if (quote.type === 'PROPERTY') {
+                propertyDetails = await Property.findOne({
+                    _id: quote.property
+                });
+
+                property = {
+                    address: propertyDetails.address,
+                    name: propertyDetails.name,
+                    email: propertyDetails.custEmail,
+                    phone: propertyDetails.phone
+                };
+
+            }
+
+            let quoteDetails = new QuoteDetails({
+                id: quoteId,
+                user,
+                property,
+                items: quoteItems,
+                notes: quote.notes,
+                type: quote.type,
+                createDate: quote.CreateDate,
+                status: quote.status,
+                transportType: quote.transportType,
+                transportDate: quote.transportDate
+            });
+
+            res.status(200).json(
+                success(
+                    'Quote Details', {
+                        quoteDetails,
+                    },
+                    res.statusCode
+                )
+            );
+        }
+
+    } catch (err) {
+        res
+            .status(500)
+            .json(
+                error(
+                    'Unexpected error has occured. Please try again later',
+                    res.statusCode,
+                ),
+            );
     }
 
-    // @route GET quote/:id
+}
+
+// @route GET quote/:id
 // @desc get quote details
 // @access Private
 
@@ -182,5 +420,8 @@ const getPendingQuotes = async (req, res, next) => {
 
 module.exports = {
     createQuote,
-    getPendingQuotes
+    getPendingQuotes,
+    getAdminQuote,
+    getAllAdminQuotes,
+    getTotalQuotes
 };

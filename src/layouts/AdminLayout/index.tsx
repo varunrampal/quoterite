@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
   content: {
     flex: '1 1 auto',
     height: '100%',
-    overflow: 'auto'
+    //overflow: 'auto' // this will add scrollbar
   }
 }));
   
@@ -56,6 +56,7 @@ const AdminLayout = ({children, ...rest}) => {
 }  
   
 const AdminLayoutRoute = ({component: Component, ...rest}) => {  
+  console.log({...rest})
   return (  
     <Route {...rest} render={matchProps => (  
       <AdminLayout>  

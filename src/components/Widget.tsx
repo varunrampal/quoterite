@@ -14,7 +14,7 @@ import LocalMallIcon from '@material-ui/icons/LocalMall';
 import AssignmentIcon from '@material-ui/icons/Assignment';
 import LocalShippingIcon from '@material-ui/icons/LocalShipping';
 import Person from '@material-ui/icons/Person';
-
+import Money from '@material-ui/icons/Money';
 const useStyles = makeStyles((theme) => ({
     root: {
         height: '100%',
@@ -50,7 +50,7 @@ avatarYellow: {
 
 interface IProps {
     className?: string;
-    type: 'quote' | 'order' | 'invoice' | 'delivery' | 'customers';
+    type: 'pendingquote' | 'repliedquote' | 'order' | 'invoice' | 'delivery' | 'customers' | 'pendingpayments' | 'pendingorders';
     heading: string;
     content: number;
 }
@@ -65,9 +65,15 @@ const Widget: React.FC<IProps> = ({
     const classes = useStyles();
     const avatar = () => {
         switch (type) {
-            case 'quote':
+            case 'pendingquote':
                 return (
                     <Avatar className={classes.avatarRed}>
+                        <AssignmentIcon></AssignmentIcon>
+                    </Avatar>
+                );
+                case 'repliedquote':
+                return (
+                    <Avatar className={classes.avatarMain}>
                         <AssignmentIcon></AssignmentIcon>
                     </Avatar>
                 );
@@ -95,6 +101,18 @@ const Widget: React.FC<IProps> = ({
                     <Person></Person>
                 </Avatar>
               );
+              case 'pendingpayments':
+                return (
+                  <Avatar className={classes.avatarRed}>
+                      <Money></Money>
+                  </Avatar>
+                );
+                case 'pendingorders':
+                    return (
+                      <Avatar className={classes.avatarRed}>
+                          <LocalMallIcon></LocalMallIcon>
+                      </Avatar>
+                    );
         }
     };
 

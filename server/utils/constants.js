@@ -10,7 +10,7 @@ module.exports = {
     JWT_KEY,
     SENDGRID_API_KEY,
     SENGRID_API_SENDER,
-     Bucket,
+    Bucket,
     sender_email,
     receiver_email
   

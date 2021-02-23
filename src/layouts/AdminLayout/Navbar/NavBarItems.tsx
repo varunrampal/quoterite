@@ -26,7 +26,7 @@ export const adminItems = [
       title: 'Customers'
     },
     {
-      href: '/admin/quotes',
+      href: '/admin/quoteslist',
       icon: ClipboardIcon,
       title: 'Quotes'
     },

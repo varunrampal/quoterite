@@ -16,6 +16,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import NotificationsIcon from '@material-ui/icons/NotificationsOutlined';
 import InputIcon from '@material-ui/icons/Input';
 import { ThemeContext } from '../../theme/ThemeProvider';
+import Logo from '../../components/Logo';
 
 const useStyles = makeStyles(() => ({
     root: {},
@@ -67,7 +68,7 @@ const TopBar: React.FC<IProps> = ({ className, onMobileNavOpen, ...rest }) => {
             <Toolbar>
                 <RouterLink to={logoLink} style={{ textDecoration: 'none' }}>
                     {' '}
-                    <div className={classes.logoText}>Quoterite</div>
+                    <div><Logo type = "inner"/></div>
                 </RouterLink>
                 <Box flexGrow={1} />
                 <Hidden mdDown>

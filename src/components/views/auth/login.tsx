@@ -1,5 +1,4 @@
 import React, { useContext } from 'react';
-
 import { createStyles } from '@material-ui/core/styles';
 import Avatar from '@material-ui/core/Avatar';
 import { TextField, Theme, makeStyles, Grid } from '@material-ui/core';
@@ -19,7 +18,9 @@ import ErrorModal from '../../../ui/ErrorModal';
 import { AuthContext } from '../../../context/auth-context';
 import withErrorBoundary from '../../../hoc/withErrorBoundary';
 import AppLink from '../../AppLink';
-import {REACT_APP_API_BASE_URL} from '../../../utils/constants';
+import { REACT_APP_API_BASE_URL } from '../../../utils/constants';
+import Background from '../../../assets/login-bg.jpg';
+import { GoogleLogin } from 'react-google-login';
 
 //TODO: try to refactor using example from medium subscription
 const styles = makeStyles((theme: Theme) =>
@@ -34,6 +35,16 @@ const styles = makeStyles((theme: Theme) =>
                 width: '90%',
                 margin: 'auto',
             },
+        },
+        image: {
+            backgroundImage: `url(${Background})`,
+            backgroundRepeat: 'no-repeat',
+            backgroundColor:
+                theme.palette.type === 'light'
+                    ? theme.palette.grey[50]
+                    : theme.palette.grey[900],
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
         },
         logo: {
             position: 'relative',
@@ -89,6 +100,12 @@ const styles = makeStyles((theme: Theme) =>
         submitButton: {
             marginTop: '10px',
         },
+
+        googleButton: {
+            marginTop: '10px',
+            width:'100%',
+            fontSize: '16px'
+        }
     }),
 );
 
@@ -96,7 +113,6 @@ export interface ILoginForm {
     email?: string;
     password?: string;
 }
-
 
 const initialFormValues: ILoginForm = {
     email: '',
@@ -108,23 +124,21 @@ const formValidationSchema = Yup.object().shape({
     password: Yup.string().required('Please enter your password'),
 });
 
+const clientId =
+    '639444473821-rs05mdbi48kl5bhl3jd3q73ucviqnp8r.apps.googleusercontent.com';
+
 const Login: React.FC = () => {
     const classes = styles();
     const history = useHistory();
 
-    const {
-        isLoading,
-        error,
-        sendRequest,
-        clearError,
-           } = useHttpClient();
+    const { isLoading, error, sendRequest, clearError } = useHttpClient();
 
     const auth = useContext(AuthContext);
 
     const loginUser = async (values: ILoginForm, resetForm: Function) => {
         try {
             // const endpoint = process.env.REACT_APP_API_BASE_URL + 'user/login';
-          
+
             const endpoint = `${REACT_APP_API_BASE_URL}/user/login`;
             const responseData = await sendRequest(
                 endpoint,
@@ -149,9 +163,9 @@ const Login: React.FC = () => {
                     responseData.results.token,
                 );
 
-                if( responseData.results.userRole === 1) {
+                if (responseData.results.userRole === 1) {
                     history.push('/admin/dashboard');
-                } else  if( responseData.results.userRole === 0) {
+                } else if (responseData.results.userRole === 0) {
                     history.push('/customer/dashboard');
                 }
             }
@@ -159,6 +173,53 @@ const Login: React.FC = () => {
             if (error.code === 401) {
                 resetForm({});
             }
+        }
+    };
+    const handleGoogleLogin = (user) => {
+  
+        const userObj = {
+            name: user.profileObj.name,
+            email: user.profileObj.email,
+            password:user.profileObj.email,
+            phone: 123,
+            type: 'GOOGLE'
+        }
+        createNewUser(userObj);
+    };
+
+    const handleGoogleLoginFailure = (err) => {
+       console.log(err);
+    };
+    const createNewUser = async (userObj) => {
+        try {
+            const endpoint = `${REACT_APP_API_BASE_URL}/user/signup`;
+            const responseData = await sendRequest(
+                endpoint,
+                'POST',
+                JSON.stringify({
+                    name: userObj.name,
+                    email: userObj.email,
+                    password: userObj.password,
+                    phone: userObj.phone,
+                    type: userObj.type
+                }),
+                {
+                    'Content-Type': 'application/json',
+                },
+            );
+            auth.login(
+                responseData.results.userId,
+                responseData.results.userName,
+                responseData.results.userEmail,
+                responseData.results.userRole,
+                true,
+                responseData.results.token,
+            );
+            
+            history.push('/customer/dashboard');
+                 
+        } catch (err) {
+            console.log(err);
         }
     };
 
@@ -170,8 +231,8 @@ const Login: React.FC = () => {
             <main className={classes.main}>
                 <CssBaseline />
 
-                <Paper className={classes.paper}>
-                    <div className={classes.logoText}>Quoterite</div>
+                <Paper className={classes.paper} elevation={6} square>
+                    <div className={classes.logoText}>Finnso</div>
                     <Avatar className={classes.avatar}>
                         <AccountCircleRounded fontSize="inherit" />
                     </Avatar>
@@ -263,7 +324,6 @@ const Login: React.FC = () => {
                                         </Grid>
                                         <Grid
                                             item
-                                           
                                             xs={11}
                                             className={classes.submitButton}
                                         >
@@ -277,22 +337,49 @@ const Login: React.FC = () => {
                                             >
                                                 Login
                                             </Button>
-                                        </Grid>
-                                     
-                                            <Grid item
-                                             lg={10}
-                                             md={10}
-                                             sm={10}
-                                             xs={10}
-                                            >
-                                             Don't have an account?{' '}<AppLink to = '/signup'  variant="body1"  color="inherit">Sign Up</AppLink>
+                                            <Grid  item
+                                            xs={12}
+                                            className={classes.submitButton}>
+                                                <GoogleLogin
+                                                    clientId={clientId}
+                                                    buttonText="Login with Google&nbsp;&nbsp;"
+                                                    onSuccess={
+                                                        handleGoogleLogin
+                                                    }
+                                                    onFailure={
+                                                        handleGoogleLoginFailure
+                                                    }
+                                                    cookiePolicy={
+                                                        'single_host_origin'
+                                                    }
+                                                    //isSignedIn={true}
+                                                     className = {classes.googleButton}                                       
+                                                ></GoogleLogin>
                                             </Grid>
-                                       
+                                        </Grid>
+
+                                        <Grid
+                                            item
+                                            lg={10}
+                                            md={10}
+                                            sm={10}
+                                            xs={10}
+                                        >
+                                            Don't have an account?
+                                            <AppLink
+                                                to="/signup"
+                                                variant="body1"
+                                                color="inherit"
+                                            >
+                                                Sign Up
+                                            </AppLink>
+                                        </Grid>
                                     </Grid>
                                 </Form>
                             );
                         }}
                     </Formik>
+                    
                 </Paper>
             </main>
         </div>
