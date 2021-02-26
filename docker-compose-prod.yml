@@ -1,0 +1,32 @@
+version: "3.7"
+
+services:
+
+  node-react-finsso-db:
+    image: mongo
+    restart: always
+    container_name: node-react-finsso-db
+    ports:
+      - 27017:27017 
+    volumes:
+      - node-react-finsso-db:/data/db
+  
+  node-react-finsso-app:
+    image: node-react-finsso-app:prod
+    build: 
+      context: .
+      target: prod
+    container_name: node-react-finsso-app
+    restart: always
+    volumes: 
+      - .:/app
+    ports:
+      - "8004:5000"
+    depends_on:
+      - node-react-finsso-db
+    environment:
+      - MONGODB_URI=mongodb+srv://varun:mEIXDSFXyFnrJsEz@cluster0.9towk.mongodb.net/quoterite?retryWrites=true&w=majority
+  
+volumes: 
+  node-react-finsso-db:
+    name: node-react-finsso-db

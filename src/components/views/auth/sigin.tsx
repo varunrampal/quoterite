@@ -320,9 +320,9 @@ const SignIn: React.FC = () => {
                                     <GoogleLogin
                                         clientId={clientId}
                                         onSuccess={handleGoogleLogin}
-                                        onFailure={handleGoogleLoginFailure}
+                                        onFailure={err => setSyncError('Error while login using Google. Please try again later.')}
                                         cookiePolicy={'single_host_origin'}
-                                        //isSignedIn={true}
+                                        // isSignedIn={true}
                                         className={classes.googleButton}
                                     > <p className={classes.googleBtnText}><b>Sign in with google</b></p></GoogleLogin>
                                     <Grid container style={{marginTop:'10px'}}>
