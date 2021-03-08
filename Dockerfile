@@ -14,6 +14,8 @@ COPY ./server/package*.json ./
 
 RUN npm install
 
+EXPOSE 5000
+
 WORKDIR /app
 
 COPY . .
