@@ -22,8 +22,13 @@ export enum OrderTransportType {
  export enum QuoteType {
     Property = "PROPERTY",
     INdividual = "INDIVIDUAL",
-  
  }
+
+ export enum QuoteReplyFrom {
+   admin = "ADMIN",
+   customer = "CUSTOMER",
+ 
+}
 
 
 
