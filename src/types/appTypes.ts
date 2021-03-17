@@ -122,6 +122,14 @@ export type QuoteDetails = {
       status: string,
       transportType: string,
       transportDate: string
-}
+};
+
+export type IQuoteReply = {
+    id: number,
+    from: String,
+    date: String,
+    notes:String,
+    items: IItem[]
+};
 
 

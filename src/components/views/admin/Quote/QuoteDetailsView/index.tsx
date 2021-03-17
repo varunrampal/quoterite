@@ -37,15 +37,25 @@ import Page from '../../../../page';
 import QuoteHeader from '../../../../QuoteHeader';
 import SuccessModal from '../../../../SuccessModal';
 import CloseIcon from '@material-ui/icons/Close';
-import { ModuleType, OrderTransportType } from '../../../../../enums/app-enums';
+import {
+    ModuleType,
+    OrderTransportType,
+    QuoteReplyFrom,
+} from '../../../../../enums/app-enums';
 import { AppState } from '../../../../../stores/root-reducer';
 import { useSelector } from 'react-redux';
-import { IItem, IProperty, QuoteDetails } from '../../../../../types/appTypes';
+import {
+    IItem,
+    IProperty,
+    QuoteDetails,
+    IQuoteReply,
+} from '../../../../../types/appTypes';
 import { REACT_APP_API_BASE_URL } from '../../../../../utils/constants';
 import QuoteTable from '../QuoteDetailsView/Table';
 import AppAccordion from '../../../../AppAcordion';
 import { InlineDateTimePicker } from 'material-ui-pickers';
 import { TransitionProps } from '@material-ui/core/transitions';
+import moment from 'moment';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -103,6 +113,7 @@ const QuoteDetailsView = () => {
         OrderTransportType.Delivery,
     );
     const [transportDate, setTransportDate] = React.useState<any>();
+    const [notes, setNotes] = useState<string>('');
     const [dialogContent, setDialogContent] = useState<string>('');
     const [open, setOpen] = React.useState(false);
     const [openCalendar, setopenCalendar] = React.useState(false);
@@ -146,7 +157,7 @@ const QuoteDetailsView = () => {
 
     const handleNotesChange = (e) => {
         const { value } = e.target;
-        //setNotes(value);
+        setNotes(value);
     };
     const handleInputChange = (
         e: any,
@@ -173,6 +184,7 @@ const QuoteDetailsView = () => {
         );
         settotalAmount(Number(result.toFixed(2)));
         setquoteItems(list);
+        console.log(list);
     };
 
     const getQuoteDetails = async () => {
@@ -195,7 +207,42 @@ const QuoteDetailsView = () => {
         }
     };
 
-    const handleSubmitClick = async () => {};
+    const handleSubmitClick = async () => {
+        const reply: IQuoteReply = {
+            id:quoteObj.id,
+            from: QuoteReplyFrom.admin,
+            date: moment().format('YYYY/MM/DD'),
+            notes: notes,
+            items: quoteItems,
+        };
+        saveQuoteReply(reply);
+      
+    };
+    const saveQuoteReply = async (quoteReply: IQuoteReply) => {
+        try {
+            const endpoint = `${REACT_APP_API_BASE_URL}/quote/savequotereply`;
+            const responseData = await sendRequest(
+                endpoint,
+                'POST',
+                JSON.stringify(quoteReply),
+                {
+                    'Content-Type': 'application/json',
+                },
+            );
+
+            if (responseData.code === 200) {
+                setSuccess(true);
+                setMessage(
+                    `Quote reply is sent successfully!`
+                );
+            } else{
+
+            }
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
     useEffect(() => {
         getQuoteDetails();
         if (quoteItems.length > 0) {

@@ -9,5 +9,6 @@ router.get('/count', quoteController.getTotalQuotes);
 router.get('/admin/:quoteid', quoteController.getAdminQuote);
 router.post('/admin/quotes', quoteController.getAllAdminQuotes);
 router.post('/create', quoteController.createQuote);
+router.post('/savequotereply', quoteController.SaveQuoteReply);
 
 module.exports = router;
